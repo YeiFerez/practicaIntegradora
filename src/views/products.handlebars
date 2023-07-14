@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Productos</title>
+</head>
+<body>
+  <h1>Lista de Productos</h1>
+  {{#if products}}
+    <ul>
+      {{#each products}}
+        <li>Producto ID: {{this.id}}</li>
+        <ul>
+          <li>Nombre: {{this.name}}</li>
+          <li>Descripción: {{this.description}}</li>
+          <li>Precio: {{this.price}}</li>
+          <li>Categoría: {{this.category}}</li>
+        </ul>
+      {{/each}}
+    </ul>
+  {{else}}
+    <p>No hay productos disponibles</p>
+  {{/if}}
+</body>
+</html>
