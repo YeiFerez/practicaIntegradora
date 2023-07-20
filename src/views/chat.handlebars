@@ -1,0 +1,23 @@
+<h1>Bienvenido al Chat</h1>
+
+<div>
+  <h2>Chat Logs</h2>
+  {{#if messages}}
+    <ul>
+      {{#each messages}}
+        <li>{{user}} dice: {{message}}</li>
+      {{/each}}
+    </ul>
+  {{else}}
+    <p>No hay mensajes</p>
+  {{/if}}
+</div>
+
+<div>
+  <h2>Enviar mensaje</h2>
+  <form action="/api/chat/messages" method="POST">
+    <input type="text" placeholder="Tu correo" name="user">
+    <input type="text" placeholder="Tu mensaje" name="message">
+    <button type="submit">Enviar</button>
+  </form>
+</div>
