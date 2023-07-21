@@ -3,7 +3,7 @@ import __dirname from "./utils.js"
 import handlebars from 'express-handlebars'
 import mongoose from "mongoose";
 
-
+// Rutas
 import productRouter from "./routes/products.router.js";
 import cartRouter from "./routes/carts.router.js";
 import chatRouter from "./routes/chats.router.js"; 

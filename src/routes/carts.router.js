@@ -5,38 +5,45 @@ const router = Router();
 const cartManager = new CartManager();
 
 router.get("/", async (req, res) => {
-  let carts = await cartManager.getAllCarts();
-  res.send({ status: "success", payload: carts });
+  try {
+    let carts = await cartManager.getAllCarts();
+    return res.status(200).json({ status: "success", payload: carts });
+  } catch (error) {
+    return res.status(500).json({ error: error.message });
+  }
 });
 
 router.get("/:id", async (req, res) => {
-  const cartId = req.params.id;
-  let cart = await cartManager.getCartById(cartId);
-  if (!cart) {
-    return res
-      .status(404)
-      .send({ status: "error", error: "Carrito no encontrado" });
+  try {
+    const cartId = req.params.id;
+    let cart = await cartManager.getCartById(cartId);
+    if (!cart) {
+      return res.status(404).json({ status: "error", error: "Carrito no encontrado" });
+    }
+    return res.status(200).json({ status: "success", payload: cart });
+  } catch (error) {
+    return res.status(500).json({ error: error.message });
   }
-  res.send({ status: "success", payload: cart });
 });
 
 router.post("/", async (req, res) => {
-  let newCart = await cartManager.createCart();
-  res.send({ status: "success", payload: newCart });
+  try {
+    let newCart = await cartManager.createCart();
+    return res.status(200).json({ status: "success", payload: newCart });
+  } catch (error) {
+    return res.status(500).json({ error: error.message });
+  }
 });
 
-router.post("/:id/products", async (req, res) => {
-  const cartId = req.params.id;
-  const { productId, quantity } = req.body;
-  let updatedCart = await cartManager.addProductToCart(
-    cartId,
-    productId,
-    quantity
-  );
+router.post("/:cid/product/:pid", async (req, res) => {
+  const cartId = req.params.cid;
+  const productId = req.params.pid;
+  
+  let updatedCart = await cartManager.addProductToCart(cartId, productId);
   if (!updatedCart) {
     return res
       .status(404)
-      .send({ status: "error", error: "Carrito no encontrado" });
+      .send({ status: "error", error: "Carrito o producto no encontrado" });
   }
   res.send({ status: "success", payload: updatedCart });
 });

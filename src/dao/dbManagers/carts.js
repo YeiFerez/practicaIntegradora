@@ -1,4 +1,5 @@
-import CartModel from "../models/carts.js";
+import CartModel from "../models/carts.model.js";
+import ProductModel from "../models/products.model.js";
 
 export default class CartManager {
   constructor() {
@@ -35,24 +36,35 @@ export default class CartManager {
     }
   }
 
-  async addProductToCart(cartId, productId, quantity) {
+  async addProductToCart(cartId, productId) {
     try {
       const cart = await CartModel.findById(cartId);
-      if (cart) {
-        const existingProduct = cart.products.find((product) => product.productId.toString() === productId);
-        if (existingProduct) {
-          existingProduct.quantity += quantity;
-        } else {
-          cart.products.push({ productId, quantity });
-        }
-        await cart.save();
-        return cart;
-      }
-      return null;
-    } catch (error) {
-      console.error("Error al agregar el producto al carrito:", error);
-      return null;
-    }
+      const newProduct = await ProductModel.findById(productId);
+
+      
+		const productInCart = cart.products.find(product => product._id.toString() === newProduct.id);
+
+		if (!productInCart) {
+			const create = {
+				$push: { products: { _id: newProduct.id, quantity: 1 } },
+			};
+			await CartModel.findByIdAndUpdate({ _id: cid }, create);
+
+			const result = await CartModel.findById(cid);
+			return res.status(200).json({ status: "success", payload: result });
+		};
+
+		await CartModel.findByIdAndUpdate(
+			{ _id: cid },
+			{ $inc: { "products.$[elem].quantity": 1 } },
+			{ arrayFilters: [{ "elem._id": newProduct.id }] }
+		);
+
+		const result = await CartModel.findById(cid);
+		return res.status(200).json({ status: "success", payload: result });
+	} catch (err) {
+		return res.status(500).json({ error: err.message });
+	};
   }
 
   async updateProductQuantity(cartId, productId, quantity) {
