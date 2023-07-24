@@ -1,24 +1,28 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <title>Productos</title>
-</head>
-<body>
-  <h1>Lista de Productos</h1>
-  {{#if products}}
-    <ul>
-      {{#each products}}
-        <li>Producto ID: {{this.id}}</li>
-        <ul>
-          <li>Nombre: {{this.name}}</li>
-          <li>Descripción: {{this.description}}</li>
-          <li>Precio: {{this.price}}</li>
-          <li>Categoría: {{this.category}}</li>
-        </ul>
-      {{/each}}
-    </ul>
-  {{else}}
-    <p>No hay productos disponibles</p>
-  {{/if}}
-</body>
-</html>
+<div class="products-container">
+	<h1 class="products-title">Products</h1>
+
+	<div class="products-list">
+		{{#each payload}}
+			<div class="products-item">
+				<p class="products-text">Product: {{this.name}}</p>
+				<p class="products-text">Category: {{this.category}}</p>
+				<p class="products-text">Price: ${{this.price}}</p>
+				<p class="products-text">Description: {{this.description}}</p>
+				<a href="/products/{{this._id}}" class="products-link-product">See product</a>
+				<a href="/api/carts/{{../cart}}/product/{{this._id}}" class="products-link-cart" target="_blank">Add to cart</a>
+			</div>
+		{{/each}}
+	</div>
+
+	<div class="paginate-container">
+		{{#if hasPrevPage}}
+			<a href="/products?query={{query}}&limit={{limit}}&page={{prevPage}}&sort={{sort}}"><button class="paginate-button">Previous</button></a>
+		{{/if}}
+
+		<p class="paginate-current">Page {{page}} of {{totalPages}}</p>
+
+		{{#if hasNextPage}}
+			<a href="/products?query={{query}}&limit={{limit}}&page={{nextPage}}&sort={{sort}}"><button class="paginate-button">Next</button></a>
+		{{/if}}
+	</div>
+</div>

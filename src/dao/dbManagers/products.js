@@ -58,4 +58,14 @@ export default class ProductsManager {
       return null;
     }
   }
+
+  async getAllProductsPaginated(filter, options) {
+    try {
+      const products = await productModel.paginate(filter, options);
+      return products;
+    } catch (error) {
+      console.error("Error al obtener los productos paginados:", error);
+      return null;
+    }
+  }
 }

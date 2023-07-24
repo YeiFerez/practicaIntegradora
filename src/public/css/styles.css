@@ -1,3 +1,38 @@
-p{
-    color: blue;
-}
+/* styles.css */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+  }
+  
+  .home-container {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+  }
+  
+  .home-title {
+    color: #333;
+  }
+  
+  .home-list {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .home-item {
+    margin-bottom: 10px;
+  }
+  
+  .home-item a {
+    color: #007bff;
+    text-decoration: none;
+  }
+  
+  .home-item a:hover {
+    text-decoration: underline;
+  }
+  
