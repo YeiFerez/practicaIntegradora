@@ -3,27 +3,82 @@ import ProductsManager from "../dao/dbManagers/products.js";
 import CartManager from "../dao/dbManagers/carts.js";
 import ChatManager from "../dao/dbManagers/chats.js";
 
+import productModel from "../dao/models/products.model.js";
+import cartModel from "../dao/models/carts.model.js";
+
 const productsManager = new ProductsManager();
 const cartManager = new CartManager();
 const chatManager = new ChatManager();
 
 const router = Router();
 
-views.get("/", async (req, res) => {
+router.get("/register", (req, res) => {
   try {
-   
-    return res.status(200).render("home", {
-      title: "Home",
-      style: "styles.css",
-      user: { first_name: "John", email: "john@example.com" }, 
-    });
-  } catch (err) {
-    return res.status(500).json({ error: err.message });
-  }
+		if(req.session.user){
+			return res.status(200).render("home", {
+				user: req.session.user,
+				style: "styles.css",
+				title: "Home",
+			});
+		};
+
+		return res.status(200).render("register", {
+			style: "styles.css",
+			title: "Register",
+		});
+	} catch (err) {
+		return res.status(500).json({ error: err.message });
+	};
+});
+
+router.get("/login", (req, res) => {
+  try {
+		if(req.session.user){
+			return res.status(200).render("home", {
+				user: req.session.user,
+				style: "styles.css",
+				title: "Home",
+			});
+		};
+
+		return res.status(200).render("login", {
+			style: "styles.css",
+			title: "Login",
+		});
+	} catch (err) {
+		return res.status(500).json({ error: err.message });
+	};
+});
+
+router.get("/", async (req, res) => {
+  try {
+		if(!req.session.user){
+			return res.status(200).render("login", {
+				style: "styles.css",
+				title: "Login",
+			});
+		};
+
+		return res.status(200).render("home", {
+			user: req.session.user,
+			style: "styles.css",
+			title: "Home",
+		});
+	} catch (err) {
+		return res.status(500).json({ error: err.message });
+	};
 });
 
 router.get("/products", async (req, res) => {
   try {
+
+    if(!req.session.user){
+			return res.status(200).render("login", {
+				style: "styles.css",
+				title: "Login",
+			});
+		};
+
     let { limit, page, query, sort } = req.query;
 
     // Validación de Page:
@@ -56,18 +111,45 @@ router.get("/products", async (req, res) => {
       lean: true
     };
 
-    const products = await productsManager.getAllProductsPaginated(filter, options);
+    const products = await productModel.paginate({}, options);
+		const filteredProducts = await productModel.paginate(filter, options);
 
     // Ordenar data según sort:
     if (sort === "asc") {
       // Ascendente
+      filteredProducts.data.sort((a, b) => a.price - b.price);
       products.data.sort((a, b) => a.price - b.price);
     } else {
       // Descendente
+      filteredProducts.data.sort((a, b) => b.price - a.price);
       products.data.sort((a, b) => b.price - a.price);
     }
 
+    if (products.data.length <= 0) {
+			return res.status(200).send(`There's no products for this search`);
+		};
+
+    if (filteredProducts.data.length > 0) {
+			return res.status(200).render("products", {
+				status: "success",
+				payload: filteredProducts.data,
+				page,
+				limit,
+				query,
+				sort,
+				cart,
+				totalPages: filteredProducts.totalPages,
+				hasPrevPage: filteredProducts.hasPrevPage,
+				hasNextPage: filteredProducts.hasNextPage,
+				prevPage: filteredProducts.prevPage,
+				nextPage: filteredProducts.nextPage,
+				title: "Products",
+				style: "styles.css",
+			});
+		}
+
     return res.status(200).render("products", {
+      status: "success",
       title: "Products",
       payload: products.data,
       page,
@@ -90,6 +172,12 @@ router.get("/products", async (req, res) => {
 
 router.get("/products/:pid", async (req, res) => {
   try {
+    if(!req.session.user){
+			return res.status(200).render("login", {
+				style: "styles.css",
+				title: "Login",
+			});
+		};
     const { pid } = req.params;
     const product = await productsManager.getProductById(pid);
 
@@ -122,6 +210,12 @@ router.get("/carts", async (req, res) => {
 router.get("/chat", async (req, res) => {
   // Ruta para mostrar los mensajes del chat
   try {
+    if(!req.session.user){
+			return res.status(200).render("login", {
+				style: "styles.css",
+				title: "Login",
+			});
+		};
     let messages = await chatManager.getAllMessages();
     console.log(messages);
     res.render("chat", { title: "Chat", messages });
