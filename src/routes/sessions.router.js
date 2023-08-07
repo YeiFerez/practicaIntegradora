@@ -1,39 +1,38 @@
 import { Router } from "express";
 import userModel from "../dao/models/Users.model.js";
+import passport from "passport";
 
 const router=Router();
 
-router.post('/register',async(req,res)=>{
-    const { first_name,last_name,email, age, password}=req.body;
-    const exist =await userModel.findOne({email});
-
-    if(exist) return res.status(400).send({status:"error",error:"Users already exists"})
-
-    const user={
-        first_name,
-        last_name,
-        email,
-        age,
-        password
-    }
-    let result = await userModel.create(user)
-    res.send({status:"success",message:"User registered"})
-})
+router.post("/register", passport.authenticate("register"), async (req, res) => {
+	try {
+		req.session.user = {
+			first_name: req.user.first_name,
+			last_name: req.user.last_name,
+			email: req.user.email,
+      age: req.user.age,
+		};
+		return res.status(200).send({status: 'success', response: 'User created'});
+	} catch (err) {
+		return res.status(500).json({ status: 'error', response: err.message });
+	};
+});
 
 
-router.post('/login',async(req,res)=>{
-    const {email,password}=req.body
-    const user = await userModel.findOne({email,password});
-
-    if(!user) return res.status(400).send({status:"error",error:"Incorrect credentials"})
-
-    req.session.user={
-        name: `${user.first_name} ${user.last_name}`,
-        email:user.email,
-        age: user.age
-    }
-    res.send({status:"success",payload:req.session.user, message:"Nuestro primer logueo"})
-})
+router.post("/login", passport.authenticate('login'), async (req, res) => {
+	try {
+		const email = req.user.email;
+		await userModel.findOne({email});
+		req.session.user = {
+			first_name: req.user.first_name,
+			last_name: req.user.last_name,
+			email: req.user.email,
+		};
+		return res.status(200).send({status: 'success', response: 'User loged'});
+	} catch (err) {
+		return res.status(500).json({ error: err.message });
+	};
+});
 
 router.post("/logout", (req, res) => {
     try {

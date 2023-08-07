@@ -24,6 +24,12 @@ const connection= mongoose.connect('mongodb+srv://yedafeco17:Danilo1234@ecommerc
 }
 );
 
+import passport from "passport";
+import initializePassport from "./config/passport.config.js";
+initializePassport();
+app.use(passport.initialize());
+app.use(passport.session());
+
 app.engine('handlebars', handlebars.engine());
 app.set('views',__dirname+'/views')
 app.set('view engine','handlebars')
