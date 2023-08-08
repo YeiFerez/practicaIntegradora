@@ -48,5 +48,13 @@ router.post("/logout", (req, res) => {
       return res.status(500).json({ error: err.message });
     }
   });
+
+  router.get('/github', passport.authenticate('github'), async (req, res) => {});
+  
+  router.get('/githubCallback', passport.authenticate('github'), async (req, res) => {
+		req.session.user = req.user;
+		res.redirect('/');
+	}
+);
   
 export default router;
