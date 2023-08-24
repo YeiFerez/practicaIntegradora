@@ -2,12 +2,35 @@ import passport from 'passport';
 import local from 'passport-local';
 import GitHubStrategy from 'passport-github2'
 import userModel from '../dao/models/Users.model.js';
+import adminModel from '../dao/models/admin.model.js';
 import { createHash, isValidPassword } from '../utils.js';
 import jwt from 'passport-jwt';
+import cookieExtractor from '../utils/cookieExtractor.utils.js';
 
 
 const LocalStrategy = local.Strategy;
+const JWTStrategy = jwt.Strategy;
+const ExtractJWT = jwt.ExtractJwt;
+
 const initializePassport = () => {
+
+	passport.use(
+		'jwt',
+		new JWTStrategy(
+			{
+				jwtFromRequest: ExtractJWT.fromExtractors([cookieExtractor]),
+				secretOrKey: "<JTSECRET>"
+			},
+			async (jwt_payload, done) => {
+				try {
+					return done(null, jwt_payload);
+				} catch (err) {
+					return done('Error:', err);
+				}
+			}
+		)
+	);
+
 	passport.use(
 		'register',
 		new LocalStrategy(
@@ -15,10 +38,16 @@ const initializePassport = () => {
 			async (req, username, password, done) => {
 				const { first_name, last_name, email, age } = req.body;
 				try {
+					if (email == 'adminDan@gmail.com') {
+						return done(null, false, {
+							status: 200,
+							message: 'cuenta admin no es posible continuar',
+						});
+					}
 					const user = await userModel.findOne({ email: username });
 
 					if (user) {
-						return done(null, false, {message: 'User already exist'});
+						return done(null, false, {message: 'ya existe este usuario'});
 					};
 
 					const newUser = {
@@ -27,10 +56,11 @@ const initializePassport = () => {
 						email,
 						age,
 						password: createHash(password),
+						role: 'user',
 					};
 
 					const result = await userModel.create(newUser);
-					return done(null, result, {message: 'User created'});
+					return done(null, result, {message: 'Usuario Creado'});
 				} catch (err) {
 					return done('Error:', err);
 				};
@@ -44,13 +74,27 @@ const initializePassport = () => {
 			{ passReqToCallback: true, usernameField: 'email' },
 			async (req, username, password, done) => {
 				try {
+					if (username == 'adminDan@gmail.com' && password == 'Danilo1234') {
+						const user = await adminModel.findOne({ email: username });
+						if (!user) {
+							const user = await adminModel.create({
+								email: 'adminDan@gmail.com',
+								password: createHash(password),
+								role: 'admin',
+							});
+							return done(null, user);
+						}
+						return done(null, user);
+					}
+
+
 					const user = await userModel.findOne({ email: username });
 					if (!user) {
-						return done(null, false, {message: 'User doesnt exist'});
+						return done(null, false, {message: 'usuario no existe'});
 					};
 
           if(!isValidPassword(user, password)){
-						return done(null, false, {message: 'Invalid credentials'});
+						return done(null, false, {message: 'credenciales invalidas'});
           };
 
 					return done(null, user);
@@ -60,6 +104,8 @@ const initializePassport = () => {
 			}
 		)
 	);
+
+	
 
 	passport.use('github',new GitHubStrategy(
 			{

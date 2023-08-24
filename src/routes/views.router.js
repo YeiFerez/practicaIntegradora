@@ -133,6 +133,7 @@ router.get("/products", async (req, res) => {
 			return res.status(200).render("products", {
 				status: "success",
 				payload: filteredProducts.data,
+        user: req.session.user,
 				page,
 				limit,
 				query,
@@ -152,6 +153,7 @@ router.get("/products", async (req, res) => {
       status: "success",
       title: "Products",
       payload: products.data,
+      user: req.session.user,
       page,
       limit,
       query,
