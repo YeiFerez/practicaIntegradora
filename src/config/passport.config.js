@@ -6,6 +6,12 @@ import adminModel from '../dao/models/admin.model.js';
 import { createHash, isValidPassword } from '../utils.js';
 import jwt from 'passport-jwt';
 import cookieExtractor from '../utils/cookieExtractor.utils.js';
+import config from './enviroment.config.js';
+
+const jwtSecret = config.JWT_SECRET;
+const githubClientId = config.GITHUB_CLIENT_ID;
+const githubClientSecret = config.GITHUB_CLIENT_SECRET;
+const githubCallbackUrl = config.GITHUB_CALLBACK_URL;
 
 
 const LocalStrategy = local.Strategy;
@@ -19,7 +25,7 @@ const initializePassport = () => {
 		new JWTStrategy(
 			{
 				jwtFromRequest: ExtractJWT.fromExtractors([cookieExtractor]),
-				secretOrKey: "<JTSECRET>"
+				secretOrKey: jwtSecret,
 			},
 			async (jwt_payload, done) => {
 				try {
@@ -109,9 +115,9 @@ const initializePassport = () => {
 
 	passport.use('github',new GitHubStrategy(
 			{
-				clientID: "Iv1.cf7b2363ae577ece",
-				clientSecret: "8d01909b133badbf2a1d9c7de98d4a00cd378afe",
-				callbackURL: 'http://localhost:8080/api/session/githubcallback',
+				clientID: githubClientId,
+				clientSecret: githubClientSecret,
+				callbackURL: githubCallbackUrl,
 			},
 			async (accesToken, refreshToken, profile, done) => {
 				try {

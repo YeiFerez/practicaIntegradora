@@ -3,6 +3,8 @@ import __dirname from "./utils.js"
 import handlebars from 'express-handlebars'
 import mongoose from "mongoose";
 import session from "express-session";
+import cookieParser from "cookie-parser";
+import config from "./config/enviroment.config.js";
 
 // Rutas
 import productRouter from "./routes/products.router.js";
@@ -12,12 +14,15 @@ import viewRouter from "./routes/views.router.js"
 import sessionRouter from "./routes/sessions.router.js"
 
 
+const cookieSecret = config.COOKIE_SECRET;
+const PORT = config.PORT;
+const mongoUrl = config.MONGO_URL;
+const mongoSessionSecret = config.MONGO_SESSION_SECRET;
+
 const app = express();
-const PORT=8080;
 
 
 import MongoStore from "connect-mongo";
-const mongoUrl = "mongodb+srv://yedafeco17:Danilo1234@ecommerce.9zqkpm7.mongodb.net/?retryWrites=true&w=majority"
 const enviroment = async () =>{
   await mongoose.connect(mongoUrl);
 };
@@ -28,7 +33,7 @@ app.use(session({
       mongoOptions:{ useNewUrlParser:true, useUnifiedTopology:true},
       ttl:3600
   }),
-  secret:"12345abcd",
+  secret:mongoSessionSecret,
   resave:false,
   saveUninitialized:false
 }));
@@ -48,6 +53,7 @@ app.use(express.static(__dirname+'/public'))
 
 app.use(express.json())
 app.use(express.urlencoded({extended:true}))
+app.use(cookieParser(cookieSecret));
 app.use('/',viewRouter)
 app.use('/api/sessions',sessionRouter)
 app.use("/api/products", productRouter);

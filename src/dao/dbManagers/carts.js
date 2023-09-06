@@ -3,7 +3,6 @@ import ProductModel from "../models/products.model.js";
 
 export default class CartManager {
   constructor() {
-    console.log("Estamos trabajando con la base de datos de MongoDB");
   }
 
   async getAllCarts() {

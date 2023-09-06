@@ -2,7 +2,7 @@ import productModel from "../models/products.model.js";
 
 export default class ProductsManager {
   constructor() {
-    console.log("Estamos trabajando con la base de datos de MongoDB");
+    
   }
 
   async getAllProducts() {

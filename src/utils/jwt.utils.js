@@ -1,4 +1,6 @@
 import jwt from 'jsonwebtoken';
+import config from '../config/enviroment.config.js';
+
 const JWT_SECRET = '<JTSECRET>';
 
 export const generateToken = (user) => {
