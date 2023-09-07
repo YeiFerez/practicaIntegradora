@@ -1,98 +1,139 @@
-import CartManager from "../dao/dbManagers/carts.js";
+import { cartsService } from '../services/services.js';
+import { successResponse, errorResponse, HTTP_STATUS  } from '../utils/recursos.js';
 
-const cartManager = new CartManager();
-
-const carts = async (req, res) => {
+export const carts = async (req, res) => {
 	try {
-		let carts = await cartManager.getAllCarts();
-		return res.status(200).json({ status: "success", payload: carts });
-	  } catch (error) {
-		return res.status(500).json({ error: error.message });
-	  }
+		const payload = await cartsService.getCarts();
+		if (typeof(payload) == 'string') {
+			const errorMessage = 'Error fetching carts';
+			return res.status(HTTP_STATUS.NOT_FOUND).json(errorResponse(errorMessage, payload));
+		}
+		return res.status(HTTP_STATUS.OK).json(successResponse({ carts: payload }));
+	} catch (err) {
+		return res.status(HTTP_STATUS.SERVER_ERROR).json(errorResponse('Internal server error', err.message));
+	}
 };
 
-const cart = async (req, res) => {
+export const cart = async (req, res) => {
 	try {
-	  const cartId = req.params.id;
-	  let cart = await cartManager.getCartById(cartId);
-	  if (!cart) {
-		return res.status(404).json({ status: "error", error: "Carrito no encontrado" });
-	  }
-	  return res.status(200).json({ status: "success", payload: cart });
-	} catch (error) {
-	  return res.status(500).json({ error: error.message });
+		const { cid } = req.params;
+		const payload = await cartsService.getCart(cid);
+		if (typeof(payload) == 'string') {
+			const errorMessage = 'Error fetching cart';
+			return res.status(HTTP_STATUS.NOT_FOUND).json(errorResponse(errorMessage, payload));
+		}
+		return res.status(HTTP_STATUS.OK).json(successResponse({ cart: payload }));
+	} catch (err) {
+		return res.status(HTTP_STATUS.SERVER_ERROR).json(errorResponse('Internal server error', err.message));
 	}
-  }
+};
 
-const createCart = async (req, res) => {
+export const createCart = async (req, res) => {
 	try {
-	  let newCart = await cartManager.createCart();
-	  return res.status(200).json({ status: "success", payload: newCart });
-	} catch (error) {
-	  return res.status(500).json({ error: error.message });
+		const payload = await cartsService.createCart();
+		if (typeof(payload) == 'string') {
+			const errorMessage = 'Error creating cart';
+			return res.status(HTTP_STATUS.NOT_FOUND).json(errorResponse(errorMessage, payload));
+		}
+		return res.status(HTTP_STATUS.OK).json(successResponse({ cart: payload }));
+	} catch (err) {
+		return res.status(HTTP_STATUS.SERVER_ERROR).json(errorResponse('Internal server error', err.message));
 	}
-  }
+};
 
-const addProduct = async (req, res) => {
-	const cartId = req.params.cid;
-	const productId = req.params.pid;
-	
-	let updatedCart = await cartManager.addProductToCart(cartId, productId);
-	if (!updatedCart) {
-	  return res
-		.status(404)
-		.send({ status: "error", error: "Carrito o producto no encontrado" });
+export const addProduct = async (req, res) => {
+	try {
+		const { cid, pid } = req.params;
+		const payload = await cartsService.createProduct(cid, pid);
+		if (typeof(payload) == 'string') {
+			const errorMessage = 'Error inserting product into cart';
+			return res.status(HTTP_STATUS.NOT_FOUND).json(errorResponse(errorMessage, payload));
+		}
+		return res.status(HTTP_STATUS.OK).json(successResponse({ cart: payload }));
+	} catch (err) {
+		return res.status(HTTP_STATUS.SERVER_ERROR).json(errorResponse('Internal server error', err.message));
 	}
-	res.send({ status: "success", payload: updatedCart });
-  }
+};
 
+export const updateCart = async (req, res) => {
+	try {
+		const { cid } = req.params;
+		const newCart = req.body;
+		const payload = await cartsService.updateCart(cid, newCart);
+		if (typeof(payload) == 'string') {
+			const errorMessage = 'Error editing cart';
+			return res.status(HTTP_STATUS.NOT_FOUND).json(errorResponse(errorMessage, payload));
+		}
+		return res.status(HTTP_STATUS.OK).json(successResponse({ cart: payload }));
+	} catch (err) {
+		return res.status(HTTP_STATUS.SERVER_ERROR).json(errorResponse('Internal server error', err.message));
+	}
+};
 
-const updateProduct = async (req, res) => {
-    const cartId = req.params.id;
-    const productId = req.params.productId;
-    const { quantity } = req.body;
-    let updatedCart = await cartManager.updateProductQuantity(
-      cartId,
-      productId,
-      quantity
-    );
-    if (!updatedCart) {
-      return res
-        .status(404)
-        .send({ status: "error", error: "Carrito o producto no encontrado" });
-    }
-    res.send({ status: "success", payload: updatedCart });
-  };
+export const updateProduct = async (req, res) => {
+	try {
+		const { cid, pid } = req.params;
+		const { quantity } = req.body;
+		const payload = await cartsService.updateProduct(cid, pid, quantity);
+		if (typeof(payload) == 'string') {
+			const errorMessage = 'Error editing product in cart';
+			return res.status(HTTP_STATUS.NOT_FOUND).json(errorResponse(errorMessage, payload));
+		}
+		return res.status(HTTP_STATUS.OK).json(successResponse({ cart: payload }));
+	} catch (err) {
+		return res.status(HTTP_STATUS.SERVER_ERROR).json(errorResponse('Internal server error', err.message));
+	}
+};
 
-const deleteProduct = async (req, res) => {
-    const cartId = req.params.id;
-    const productId = req.params.productId;
-    let updatedCart = await cartManager.removeProductFromCart(cartId, productId);
-    if (!updatedCart) {
-      return res
-        .status(404)
-        .send({ status: "error", error: "Carrito o producto no encontrado" });
-    }
-    res.send({ status: "success", payload: updatedCart });
-  };
+export const clearCart = async (req, res) => {
+	try {
+		const { cid } = req.params;
+		const payload = await cartsService.deleteCart(cid);
+		if (typeof(payload) == 'string') {
+			const errorMessage = 'Error clearing cart';
+			return res.status(HTTP_STATUS.NOT_FOUND).json(errorResponse(errorMessage, payload));
+		}
+		return res.status(HTTP_STATUS.OK).json(successResponse({ cart: payload }));
+	} catch (err) {
+		return res.status(HTTP_STATUS.SERVER_ERROR).json(errorResponse('Internal server error', err.message));
+	}
+};
 
-const deleteCart = async (req, res) => {
-    const cartId = req.params.id;
-    let updatedCart = await cartManager.clearCart(cartId);
-    if (!updatedCart) {
-      return res
-        .status(404)
-        .send({ status: "error", error: "Carrito no encontrado" });
-    }
-    res.send({ status: "success", payload: updatedCart });
-  };
+export const clearProduct = async (req, res) => {
+	try {
+		const { cid, pid } = req.params;
+		const payload = await cartsService.deleteProduct(cid, pid);
+		if (typeof(payload) == 'string') {
+			const errorMessage = 'Error clearing product from cart';
+			return res.status(HTTP_STATUS.NOT_FOUND).json(errorResponse(errorMessage, payload));
+		}
+		return res.status(HTTP_STATUS.OK).json(successResponse({ cart: payload }));
+	} catch (err) {
+		return res.status(HTTP_STATUS.SERVER_ERROR).json(errorResponse('Internal server error', err.message));
+	}
+};
+
+export const purchase = async (req, res) => {
+	try {
+		const payload = await cartsService.purchaseCart(req, res);
+		if (typeof(payload) == 'string') {
+			const errorMessage = 'Error purchasing cart';
+			return res.status(HTTP_STATUS.NOT_FOUND).json(errorResponse(errorMessage, payload));
+		}
+		return res.status(HTTP_STATUS.OK).json(successResponse({ cart: payload }));
+	} catch (err) {
+		return res.status(HTTP_STATUS.SERVER_ERROR).json(errorResponse('Internal server error', err.message));
+	}
+};
 
 export default {
   carts,
   cart,
   createCart,
   addProduct,
+  updateCart,
   updateProduct,
-  deleteCart,
-  deleteProduct,
+  clearCart,
+  clearProduct,
+  purchase
 };

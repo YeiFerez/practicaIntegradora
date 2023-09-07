@@ -1,23 +1,21 @@
 import { Router } from "express";
-import viewsController from "../controllers/views.controller.js";
+import viewsController, { home } from "../controllers/views.controller.js";
 import { authToken } from "../utils/jwt.utils.js";
 
 const router = Router();
 
-router.get("/register",viewsController.register );
+router.get('/register', viewsController.register);
 
-router.get("/login", viewsController.login );
+router.get('/login', viewsController.login);
 
-router.get("/", viewsController.home);
+router.get('/', viewsController,home);
 
-router.get("/products", viewsController.products);
+router.get('/products', viewsController.products);
 
-router.get("/products/:pid", viewsController.product);
+router.get('/product/:pid', viewsController.product);
 
-router.get("/carts", viewsController.carts);
+router.get('/cart/:cid', viewsController.cart);
 
-router.get("/exclusive", authToken, viewsController.exclusive);
-
-router.get("/chat", viewsController.chat);
+router.get('/chat', roleAuth('user'), viewsController.chat);
 
 export default router;

@@ -1,97 +1,73 @@
-import userModel from "../dao/models/Users.model.js";
+import { successResponse, errorResponse, HTTP_STATUS  } from '../utils/recursos.js';
+import { sessionsService } from '../services/services.js';
 
-
-
-const login = async (req, res) => {
+export const login = async (req, res) => {
 	try {
-		const email = req.user.email;
-		await userModel.findOne({email});
-		req.session.user = {
-			first_name: req.user.first_name,
-			last_name: req.user.last_name,
-			email: req.user.email,
-			role: req.user.role,
-		};
-		return res.status(200).send({status: 'success', response: 'User loged'});
+		const payload = await sessionsService.getLogin(req, res);
+		if (typeof(payload) == 'string') return res.status(HTTP_STATUS.NOT_FOUND).send(payload);
+		return res.status(HTTP_STATUS.OK).json(successResponse({ user: payload }));
 	} catch (err) {
-		return res.status(500).json({ error: err.message });
-	};
-};
-
-const loginjwt = async (req, res) => {
-	try {
-		req.session.user = {
-			first_name: req.user.first_name,
-			last_name: req.user.last_name,
-			email: req.user.email,
-			role: req.user.role,
-		};
-		const access_token = generateToken(user);
-		return res.status(200).send({ status: 'success', token: access_token });
-	} catch (err) {
-		return res.status(500).json({ error: err.message });
+		return res.status(HTTP_STATUS.SERVER_ERROR).json(errorResponse(err.message));
 	}
 };
 
-const register = async (req, res) => {
+export const register = async (req, res) => {
 	try {
-		req.session.user = {
-			first_name: req.user.first_name,
-			last_name: req.user.last_name,
-			email: req.user.email,
-     		age: req.user.age,
-	 		role: req.user.role,
-		};
-		return res.status(200).send({status: 'success', response: 'User created'});
+		const payload = await sessionsService.getRegister(req, res);
+		if (typeof(payload) == 'string') return res.status(HTTP_STATUS.NOT_FOUND).send(payload);
+		return res.status(HTTP_STATUS.OK).json(successResponse({ user: payload }));
 	} catch (err) {
-		return res.status(500).json({ status: 'error', response: err.message });
-	};
+		return res.status(HTTP_STATUS.SERVER_ERROR).json(errorResponse(err.message));
+	}
 };
 
-const logout = async (req, res) => {
-    try {
-      // Destruir la sesión actual
-      req.session.destroy((err) => {
-        if (err) {
-          return res.status(500).json({ error: "Error al cerrar sesión" });
-        }
-        // Redireccionar a la página de inicio o a la página deseada después de cerrar sesión
-        res.redirect("/");
-      });
-    } catch (err) {
-      return res.status(500).json({ error: err.message });
-    }
-  };
-
-const current = async (req, res)=>{
+export const current = async (req, res) => {
 	try {
-		req.session.user = {
-			first_name: req.user.first_name,
-			last_name: req.user.last_name,
-			email: req.user.email,
-			role: req.user.role,
-		};
-		return res
-			.status(200)
-			.send({ status: 'success', response: 'User created' });
+		const { user } = req.session;
+		if (!user) return res.redirect('/');
+		const payload = await sessionsService.getCurrent(req, res);
+		if (typeof(payload) == 'string') return res.status(HTTP_STATUS.NOT_FOUND).send(payload);
+		return res.status(HTTP_STATUS.OK).json(successResponse({ user: payload }));
 	} catch (err) {
-		return res.status(500).json({ status: 'error', response: err.message });
+		return res.status(HTTP_STATUS.SERVER_ERROR).json(errorResponse(err.message));
 	}
-  };
+};
 
-const github = async (req, res) => {}
+export const github = async (req, res) => {
+	try {
+		const payload = await sessionsService.getGithub(req, res);
+		if (typeof(payload) == 'string') return res.status(HTTP_STATUS.NOT_FOUND).json(errorResponse(payload));
+		return res.redirect('/');
+	} catch (err) {
+		return res.status(HTTP_STATUS.SERVER_ERROR).json(errorResponse(err.message));
+	}
+};
 
-const githubCallback = async (req, res) => {
-	req.session.user = req.user;
-	res.redirect('/');
-}
+export const githubCallback = async (req, res) => {
+	try {
+		const payload = await sessionsService.getGithubCallback(req, res);
+		if (typeof(payload) == 'string') return res.status(HTTP_STATUS.NOT_FOUND).json(errorResponse(payload));
+		return res.redirect('/');
+	} catch (err) {
+		return res.status(HTTP_STATUS.SERVER_ERROR).json(errorResponse(err.message));
+	}
+};
+
+export const logout = async (req, res) => {
+	try {
+		const payload = await sessionsService.getLogout(req, res);
+		if (typeof(payload) == 'string') return res.status(HTTP_STATUS.NOT_FOUND).json(errorResponse(payload));
+		return res.redirect('/');
+	} catch (err) {
+		return res.status(HTTP_STATUS.SERVER_ERROR).json(errorResponse(err.message));
+	}
+};
 
 export default {
 	login,
-	loginjwt,
 	register,
-	logout,
 	current,
+	logout,
 	github,
 	githubCallback,
-};
+  };

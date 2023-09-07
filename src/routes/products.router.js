@@ -4,14 +4,16 @@ import productsController from '../controllers/products.controller.js';
 
 const router = Router();
 
-router.get('/', productsController.products);
+router.get('/', productsController.getProduct);
 
-router.get('/:id', productsController.product);
+router.get('/:pid', productsController.getProducts);
 
-router.post('/', productsController.createProduct);
+router.post('/', roleAuth('admin'), productsController.insertProductController);
 
-router.put('/:id', productsController.updateProduct);
+router.put('/:pid', roleAuth('admin'), productsController.editProductController);
 
-router.delete('/:id', productsController.deleteProduct);
+router.delete('/:pid', roleAuth('admin'), productsController.eraseProductController);
+
+router.post('/mockingproducts', roleAuth('admin'), productsController.mockingProductsController);
 
 export default router;

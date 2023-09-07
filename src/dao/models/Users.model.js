@@ -20,7 +20,6 @@ const userSchema = new mongoose.Schema({
 		type: String,
 		required: true,
 	},
-	cart: [{ type: mongoose.Schema.Types.String, ref: 'carts' }],
 	role: {
 		type: String,
 		default: "user",

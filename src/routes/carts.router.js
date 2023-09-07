@@ -1,20 +1,25 @@
 import { Router } from "express";
 import cartsController from "../controllers/carts.controller.js";
+import roleAuth from "../controllers/role.controller.js";
 
 const router = Router();
 
 router.get("/", cartsController.carts);
 
-router.get("/:id", cartsController.cart);
+router.get("/:cid", cartsController.cart);
 
-router.post("/", cartsController.createCart);
+router.post('/', roleAuth('admin'), cartsController.createCart);
 
-router.post("/:cid/product/:pid", cartsController.addProduct);
+router.post('/:cid/product/:pid', roleAuth('user'), cartsController.addProduct);
 
-router.put("/:id/products/:productId/quantity", cartsController.updateProduct);
+router.put('/:cid', roleAuth('user'), cartsController.updateCart);
+
+router.put('/:cid/product/:pid', roleAuth('user'), cartsController.updateProduct);
+
+router.delete('/:cid', roleAuth('user'), cartsController.clearCart);
   
-router.delete("/:id/products/:productId", cartsController.deleteProduct);
+router.delete('/:cid/product/:pid', roleAuth('user'), cartsController.clearProduct);
   
-router.delete("/:id", cartsController.deleteCart);
+router.post('/:cid/purchase', roleAuth('user'), cartsController.purchase);
 
 export default router;
