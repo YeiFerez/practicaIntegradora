@@ -24,8 +24,8 @@ class ProductsService {
 
 	async createProduct(newProduct) {
 		try {
-			const { title, description, code, price, stock, category } = newProduct;
-			if (!title || !description || !code || !price || !stock || !category || !price) {
+			const { name, description, code, price, stock, category } = newProduct;
+			if (!name || !description || !code || !price || !stock || !category || !price) {
 				return new HttpError("completar todos los campos para crear el producto", HTTP_STATUS.BAD_REQUEST);
 			}
 			const product = new ProductDTO(newProduct);
@@ -37,8 +37,8 @@ class ProductsService {
 
 	async updateProduct(pid, newProduct) {
 		try {
-			const { title, description, code, price, stock, category } = newProduct;
-			if (!title || !description || !code || !price || !stock || !category || !price) {
+			const { name, description, code, price, stock, category } = newProduct;
+			if (!name || !description || !code || !price || !stock || !category || !price) {
 				return new HttpError("completar todos los campos para crear el producto", HTTP_STATUS.BAD_REQUEST);
 			}
 			const product = new ProductDTO(newProduct);

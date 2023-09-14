@@ -1,11 +1,15 @@
-<div class="products-container">
-	<h1 class="products-title">Product</h1>
-
-	<div class="products-item">
-		<p class="products-text">Product: {{product.name}}</p>
-		<p class="products-text">Description: {{product.description}}</p>
-		<p class="products-text">Price: ${{product.price}}</p>
-		<p class="products-text">Category: {{product.category}}</p>
-		<a href="/api/carts/{{cart}}/product/{{product._id}}" class="products-link-cart" target="_blank">Add to cart</a>
+<div class='custom-product-container'>
+	<div class='custom-product-item'>
+		<h2>Product Name: {{product.name}}</h2>
+		<p class='custom-product-description'>Description: {{product.description}}</p>
+		<p class='custom-product-price'>$ {{product.price}}</p>
+		<p class='custom-product-stock'>Stock: {{product.stock}}</p>
+		<p class='custom-product-category'>Category: {{product.category}}</p>
 	</div>
+
+	<form class='custom-product-form' cart='{{cart}}' product='{{product._id}}'>
+		<button class='custom-product-button'>Add to Cart</button>
+	</form>
 </div>
+
+<script src='/js/products.js'></script>

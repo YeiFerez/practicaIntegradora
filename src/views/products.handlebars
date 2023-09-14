@@ -1,28 +1,44 @@
-<div class="products-container">
-	<h1 class="products-title">Products</h1>
+<div class='custom-products-container'>
+	<div class='custom-products-list'>
 
-	<div class="products-list">
 		{{#each payload}}
-			<div class="products-item">
-				<p class="products-text">Product: {{this.name}}</p>
-				<p class="products-text">Category: {{this.category}}</p>
-				<p class="products-text">Price: ${{this.price}}</p>
-				<p class="products-text">Description: {{this.description}}</p>
-				<a href="/products/{{this._id}}" class="products-link-product">See product</a>
-				<a href="/api/carts/{{../cart}}/product/{{this._id}}" class="products-link-cart" target="_blank">Add to cart</a>
-			</div>
+		<div class="custom-product-item">
+
+			<a href="./product/{{this._id}}" class="custom-product-link">
+				<h2>{{this.name}}</h2>
+				<p class="custom-product-category">{{this.category}}</p>
+				<p class="custom-product-price">$ {{this.price}}</p>
+				<p class="custom-product-stock">Stock: {{this.stock}}</p>
+			</a>
+
+			<form
+				class='custom-product-form'
+				cart="{{../cart}}"
+				product="{{this._id}}"
+			>
+				<button class="custom-product-button">Add to Cart</button>
+			</form>
+
+		</div>
 		{{/each}}
+
 	</div>
 
-	<div class="paginate-container">
+	<div class='custom-paginate-container'>
 		{{#if hasPrevPage}}
-			<a href="/products?query={{query}}&limit={{limit}}&page={{prevPage}}&sort={{sort}}"><button class="paginate-button">Previous</button></a>
+			<a
+				href='/products?query={{query}}&limit={{limit}}&page={{prevPage}}&sort={{sort}}'
+			><button class='custom-paginate-button'>Previous</button></a>
 		{{/if}}
 
-		<p class="paginate-current">Page {{page}} of {{totalPages}}</p>
+		<p class='custom-paginate-current'>Page {{page}}</p>
 
 		{{#if hasNextPage}}
-			<a href="/products?query={{query}}&limit={{limit}}&page={{nextPage}}&sort={{sort}}"><button class="paginate-button">Next</button></a>
+			<a
+				href='/products?query={{query}}&limit={{limit}}&page={{nextPage}}&sort={{sort}}'
+			><button class='custom-paginate-button'>Next</button></a>
 		{{/if}}
 	</div>
 </div>
+
+<script src='/js/products.js'></script>

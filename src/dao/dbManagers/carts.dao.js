@@ -192,8 +192,8 @@ export class CartManagerDAO{
 			const { user } = req.session;
 			const { cid } = req.params;
 			const cart = await CartModel.findById(cid).populate('products._id');
-			if (!cart) return `No cart found with ID '${cid}'.`;
-			if (cart.length < 1) return `Cant purchase an empty cart.`;
+			if (!cart) return `no se encontro carrito con ID '${cid}'.`;
+			if (cart.length < 1) return `carrito vacio.`;
 
 			let productsToPurchase = [];
 			const products = cart.products;
@@ -204,7 +204,7 @@ export class CartManagerDAO{
 				const productQuantity = product.quantity;
 
 				if (existProduct && productStock < productQuantity) {
-					logger.warn(`No enough stock for product '${productId}'`)
+					console.log(`no hay suficiente stock '${productId}'`)
 					continue;
 				}
 
@@ -230,7 +230,7 @@ export class CartManagerDAO{
 				}
 			}
 
-			if (productsToPurchase.length < 1) return `The cart is empty`;
+			if (productsToPurchase.length < 1) return `carrito vacio`;
 
 			const actualDate = new Date();
 			const formatedDate = JSON.stringify(actualDate).replace(/['"]+/g, '');
@@ -248,7 +248,7 @@ export class CartManagerDAO{
 			await sendEmail(ticket);
 			const createdTicket = await ticketModel.create(ticket);
 			if (!createdTicket)
-				return `The following products could not be purchased: ${products}`;
+				return `Estos productos no se pueden comprar: ${products}`;
 			return createdTicket;
 		} catch (error) {
 			return `${error}`;

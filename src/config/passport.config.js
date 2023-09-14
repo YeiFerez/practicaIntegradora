@@ -37,80 +37,57 @@ const initializePassport = () => {
 		)
 	);
 
+
 	passport.use(
 		'register',
 		new LocalStrategy(
 			{ passReqToCallback: true, usernameField: 'email' },
 			async (req, username, password, done) => {
-				const { first_name, last_name, email, age } = req.body;
 				try {
-					if (email == 'adminDan@gmail.com') {
-						return done(null, false, {
-							status: 200,
-							message: 'cuenta admin no es posible continuar',
-						});
-					}
+					if (username == 'adminDan@gmail.com') return done(null, false, `cuenta admin no es posible continuar.`)
+
 					const user = await userModel.findOne({ email: username });
+					if (user) return done(null, false, `ya existe este usuario.`);
 
-					if (user) {
-						return done(null, false, {message: 'ya existe este usuario'});
-					};
-
-					const newUser = {
+					const { first_name, last_name,age } = req.body;
+					const newUser = await userModel.create({
 						first_name,
 						last_name,
-						email,
 						age,
+						email: username,
 						password: createHash(password),
 						role: 'user',
-					};
-
-					const result = await userModel.create(newUser);
-					return done(null, result, {message: 'Usuario Creado'});
+					});
+					return done(null, newUser);
 				} catch (err) {
-					return done('Error:', err);
-				};
+					return done(err);
+				}
 			}
 		)
 	);
+ 
 
-  passport.use(
+	passport.use(
 		'login',
 		new LocalStrategy(
-			{ passReqToCallback: true, usernameField: 'email' },
-			async (req, username, password, done) => {
+			{ usernameField: 'email' },
+			async (username, password, done) => {
 				try {
-					if (username == 'adminDan@gmail.com' && password == 'Danilo1234') {
-						const user = await adminModel.findOne({ email: username });
-						if (!user) {
-							const user = await adminModel.create({
-								email: 'adminDan@gmail.com',
-								password: createHash(password),
-								role: 'admin',
-							});
-							return done(null, user);
-						}
-						return done(null, user);
-					}
-
-
-					const user = await userModel.findOne({ email: username });
-					if (!user) {
-						return done(null, false, {message: 'usuario no existe'});
+					if (username == 'adminDan@gmail.com') {
+						const admin = await adminModel.findOne({ email: username });
+						if (!admin || !isValidPassword(admin, password)) return done(null, false, `credenciales invalidas.`);
+						return done(null, admin);
 					};
 
-          if(!isValidPassword(user, password)){
-						return done(null, false, {message: 'credenciales invalidas'});
-          };
-
+					const user = await userModel.findOne({ email: username });
+					if (!user || !isValidPassword(user, password)) return done(null, false, `credenciales invalidas.`);
 					return done(null, user);
 				} catch (err) {
-					return done('Error:', err);
-				};
+					return done(err);
+				}
 			}
 		)
 	);
-
 	
 
 	passport.use('github',new GitHubStrategy(
@@ -121,24 +98,19 @@ const initializePassport = () => {
 			},
 			async (accesToken, refreshToken, profile, done) => {
 				try {
-					const user = await userModel.findOne({ email: profile._json.email });
+					let user = await userModel.findOne({ email: profile._json.email });
 					if (!user) {
-						const newUser = {
+						user = await userModel.create({
 							first_name: profile._json.name.split(' ')[0],
-							last_name: profile._json.name.split(' ')[2],
+							last_name: profile._json.name.split(' ')[1],
 							email: profile._json.email,
-							age:'',
 							password: '',
-						};
-
-						const result = await userModel.create(newUser);
-						return done(null, result);
-					} else {
-						done(null, user);
-					};
+						});
+					}
+					return done(null, user);
 				} catch (err) {
-					return done('Error:', err);
-				};
+					return done(err);
+				}
 			}
 		)
 	);

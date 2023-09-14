@@ -73,7 +73,7 @@ export  class ProductsManagerDAO {
 		try {
 			for ( let i = 0 ; i < 100 ; i++ ) {
 				const product = {
-					title: faker.commerce.productName(),
+					name: faker.commerce.productName(),
 					description: faker.commerce.productDescription(),
 					code: faker.string.uuid(),
 					price: faker.commerce.price(),

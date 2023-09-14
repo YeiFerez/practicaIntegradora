@@ -113,7 +113,7 @@ export class ViewsManagerDAO {
         prevPage: products.prevPage,
         nextPage: products.nextPage,
         title: "Products",
-        style: "styles.css",
+        style: "products.css",
     }
     return payload;
     } catch (error) {
@@ -136,7 +136,7 @@ export class ViewsManagerDAO {
 				header: true,
 				product,
 				cart,
-				style: "styles.css",
+				style: "product.css",
 				title: "Product",
 			}
 			return payload;

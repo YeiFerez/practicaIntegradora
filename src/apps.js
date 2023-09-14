@@ -5,6 +5,10 @@ import mongoose from "mongoose";
 import session from "express-session";
 import cookieParser from "cookie-parser";
 import config from "./config/enviroment.config.js";
+import compression from "express-compression"
+import morgan from "morgan";
+import cors from "cors"
+import router from "./routes/router.js";
 
 // Rutas
 import productRouter from "./routes/products.router.js";
@@ -37,7 +41,12 @@ app.use(session({
   resave:false,
   saveUninitialized:false
 }));
-
+app.use(compression({
+  brotli: {
+    enable: true,
+    zlib: {}
+  }
+}));
 
 import passport from "passport";
 import initializePassport from "./config/passport.config.js";
@@ -54,12 +63,15 @@ app.use(express.static(__dirname+'/public'))
 app.use(express.json())
 app.use(express.urlencoded({extended:true}))
 app.use(cookieParser(cookieSecret));
-app.use('/',viewRouter)
-app.use('/api/sessions',sessionRouter)
-app.use("/api/products", productRouter);
-app.use("/api/carts", cartRouter);
-app.use("/api/chat", chatRouter);
+app.use(morgan('dev'));
+app.use(cors());
+// app.use('/',viewRouter)
+// app.use('/api/sessions',sessionRouter)
+// app.use("/api/products", productRouter);
+// app.use("/api/carts", cartRouter);
+// app.use("/api/chat", chatRouter);
 
 const server = app.listen(PORT, () => {
     console.log(`Server escuchando puerto ${PORT}`);
   });
+router(app);

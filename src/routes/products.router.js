@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import productsController from '../controllers/products.controller.js';
-
+import roleAuth from '../controllers/role.controller.js';
 
 const router = Router();
 
@@ -14,6 +14,6 @@ router.put('/:pid', roleAuth('admin'), productsController.editProductController)
 
 router.delete('/:pid', roleAuth('admin'), productsController.eraseProductController);
 
-router.post('/mockingproducts', roleAuth('admin'), productsController.mockingProductsController);
+router.post('/mockingproducts', productsController.mockingProductsController);
 
 export default router;

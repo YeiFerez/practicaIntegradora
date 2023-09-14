@@ -11,4 +11,6 @@ export default {
   GITHUB_CALLBACK_URL: process.env.GITHUB_CALLBACK_URL,
   COOKIE_SECRET: process.env.COOKIE_SECRET,
   PORT: process.env.PORT,
+  EMAIL: process.env.EMAIL,
+  EMAIL_PASSWORD: process.env.EMAIL_PASSWORD,
 };

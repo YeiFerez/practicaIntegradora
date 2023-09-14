@@ -1,6 +1,6 @@
 import { Router } from "express";
-import viewsController, { home } from "../controllers/views.controller.js";
-import { authToken } from "../utils/jwt.utils.js";
+import viewsController from "../controllers/views.controller.js";
+import roleAuth from "../controllers/role.controller.js";
 
 const router = Router();
 
@@ -8,7 +8,7 @@ router.get('/register', viewsController.register);
 
 router.get('/login', viewsController.login);
 
-router.get('/', viewsController,home);
+router.get('/', viewsController.home);
 
 router.get('/products', viewsController.products);
 

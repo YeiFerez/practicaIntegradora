@@ -13,11 +13,13 @@ loginForm.addEventListener("submit", async (e) => {
       "Content-Type": "application/json",
     },
   }).then(res => {
-		if (res.status !== 200) {
-			alert(`Invalid credentials`);
-		} else {
-			alert(`Loged`);
-			window.location.replace("/");
-		};
-  }).catch(err => {return `Catch error: ${err}`});
+    if (res.status !== 200) return res.text()
+    return res.json();
+  }).then(payload => {
+    if (typeof payload == 'string') return alert(payload);
+    return window.location.replace('/');
+  })
+  .catch(err => {
+    return `Catch error: ${err}`
+  });
 });

@@ -1,5 +1,5 @@
 import express from "express";
-import ChatManager from "../dao/dbManagers/chats.js";
+import ChatManager from "../dao/dbManagers/chats.dao.js";
 
 const router = express.Router();
 const chatManager = new ChatManager();
