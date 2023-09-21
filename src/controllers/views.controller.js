@@ -80,7 +80,7 @@ export const cart = async (req, res) => {
         if (!user) return res.redirect('/');
         const payload = await viewsService.getCart(req, res);
         if (typeof(payload) == 'string') return res.status(HTTP_STATUS.NOT_FOUND).json(errorResponse(payload));
-        return res.status(HTTP_STATUS.OK).render('cart', payload);
+        return res.status(HTTP_STATUS.OK).render('carts', payload);
     } catch (err) {
         return res.status(HTTP_STATUS.SERVER_ERROR).json(errorResponse(err.message));
     }

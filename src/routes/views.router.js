@@ -14,7 +14,7 @@ router.get('/products', viewsController.products);
 
 router.get('/product/:pid', viewsController.product);
 
-router.get('/cart/:cid', viewsController.cart);
+router.get('/carts/:cid', viewsController.cart);
 
 router.get('/chat', roleAuth('user'), viewsController.chat);
 

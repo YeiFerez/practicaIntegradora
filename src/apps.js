@@ -9,6 +9,7 @@ import compression from "express-compression"
 import morgan from "morgan";
 import cors from "cors"
 import router from "./routes/router.js";
+import logger from "./utils/logger.util.js";
 
 // Rutas
 import productRouter from "./routes/products.router.js";
@@ -72,6 +73,6 @@ app.use(cors());
 // app.use("/api/chat", chatRouter);
 
 const server = app.listen(PORT, () => {
-    console.log(`Server escuchando puerto ${PORT}`);
+    logger.info(`Server escuchando puerto ${PORT}`);
   });
 router(app);

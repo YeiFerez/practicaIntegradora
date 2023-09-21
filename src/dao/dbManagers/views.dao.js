@@ -155,7 +155,7 @@ export class ViewsManagerDAO {
 			const payload = {
 				header: true,
 				cart: cid,
-				style: "styles.css",
+				style: "carts.css",
 				title: "Carts",
 				helpers: {
 					multiply,

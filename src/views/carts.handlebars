@@ -1,23 +1,27 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <title>Carrito de Compra</title>
-</head>
-<body>
-  <h1>Carrito de Compra</h1>
-  {{#if cart}}
-    <h2>Carrito ID: {{cart.id}}</h2>
-    {{#if cart.products.length}}
-      <ul>
-        {{#each cart.products}}
-          <li>Producto ID: {{this.id}} - Cantidad: {{this.quantity}}</li>
-        {{/each}}
-      </ul>
-    {{else}}
-      <p>No hay productos en el carrito de compra</p>
-    {{/if}}
-  {{else}}
-    <p>No se encontró el carrito de compra</p>
-  {{/if}}
-</body>
-</html>
+<div class='custom-cart-container'>
+	<div class='custom-cart-list'>
+		{{#each payload}}
+			<div class='custom-cart-item'>
+				<p>{{this._id.name}}</p>
+				<p>$ {{this._id.price}}</p>
+				<p>x{{this.quantity}}</p>
+				<p><strong>Total: ${{multiply this._id.price this.quantity}}</strong></p>
+			</div>
+		{{/each}}
+
+		<div>
+			<p class='custom-cart-total-text'>TOTAL: ${{getTotal payload}}</p>
+			<button class='custom-cart-total-button'>PURCHASE</button>
+		</div>
+
+		<form class='custom-product-form' cart='{{cart}}' product='{{product._id}}'>
+			<input type='submit' value='Add to cart' class='custom-product-button' />
+		</form>
+
+		<form class='custom-cart-form'>
+			<label>Total $</label>
+			<input type="text" value="{{getTotal payload}}" readonly />
+			<input type='submit' value='Send' class='custom-login-button' />
+		</form>
+	</div>
+</div>

@@ -3,6 +3,8 @@ import ProductModel from "../models/products.model.js";
 import ticketModel from "../models/ticket.model.js";
 import { getAmount } from "../../utils/recursos.js";
 import UserDTO from "../../dto/user.dto.js";
+import sendEmail from "../../utils/email.utils.js";
+import logger from "../../utils/logger.util.js";
 
 export class CartManagerDAO{
   constructor() {}
@@ -79,7 +81,7 @@ export class CartManagerDAO{
 
 			for (const product of newCart) {
 				if (product.quantity < 1) {
-					console.log(
+					logger.warn(
 						`'${product.quantity}' es un valor invalido, a sido ajustado a '1'`
 					);
 					product.quantity = 1;
@@ -89,7 +91,7 @@ export class CartManagerDAO{
 
 				if (existProduct && existProduct.stock < product.quantity) {
 					product.quantity = existProduct.stock;
-					console.log(`stock insuficiente, el stock fue ajustado al maximo posible: '${existProduct.stock}'`)
+					logger.warn(`stock insuficiente, el stock fue ajustado al maximo posible: '${existProduct.stock}'`)
 				}
 
 				if (existProduct && existProduct.stock >= product.quantity) {
@@ -138,7 +140,7 @@ export class CartManagerDAO{
 
 			if (newQuantity > product.stock) {
 				newQuantity = product.stock;
-				console.log(`Insuficient stock, new quantity setted on max stock: '${product.stock}'`)
+				logger.warn(`Insuficient stock, new quantity setted on max stock: '${product.stock}'`)
 			}
 
 			await CartModel.findByIdAndUpdate(
@@ -204,7 +206,7 @@ export class CartManagerDAO{
 				const productQuantity = product.quantity;
 
 				if (existProduct && productStock < productQuantity) {
-					console.log(`no hay suficiente stock '${productId}'`)
+					logger.warn(`no hay suficiente stock '${productId}'`)
 					continue;
 				}
 
