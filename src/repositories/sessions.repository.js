@@ -1,7 +1,7 @@
 import { HTTP_STATUS, HttpError  } from "../utils/recursos.js";
 import UserDTO from "../dto/user.dto.js";
 
-class SessionsService {
+class SessionsRepository {
 	constructor(dao) {
 		this.dao = dao;
 	}
@@ -55,6 +55,38 @@ class SessionsService {
 			return new HttpError(error.message, HTTP_STATUS.SERVER_ERROR);
 		}
 	}
+
+	async getRestore(req, res) {
+		try {
+			return await this.dao.getRestoreDao(req, res);
+		} catch (error) {
+			return new HttpError(error.message, HTTP_STATUS.SERVER_ERROR);
+		}
+	}
+
+	async getRestoreCallback(req, res) {
+		try {
+			return await this.dao.getRestoreCallbackDao(req, res);
+		} catch (error) {
+			return new HttpError(error.message, HTTP_STATUS.SERVER_ERROR);
+		}
+	}
+
+	async getPremium(req, res) {
+		try {
+			return await this.dao.getPremiumDao(req, res);
+		} catch (error) {
+			return new HttpError(error.message, HTTP_STATUS.SERVER_ERROR);
+		}
+	}
+
+	async getUser(req, res) {
+		try {
+			return await this.dao.getUserDao(req, res);
+		} catch (error) {
+			return new HttpError(error.message, HTTP_STATUS.SERVER_ERROR);
+		}
+	}
 }
 
-export default SessionsService;
+export default SessionsRepository;

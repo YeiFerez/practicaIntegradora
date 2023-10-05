@@ -3,7 +3,8 @@ import ProductModel from "../models/products.model.js";
 import ticketModel from "../models/ticket.model.js";
 import { getAmount } from "../../utils/recursos.js";
 import UserDTO from "../../dto/user.dto.js";
-import sendEmail from "../../utils/email.utils.js";
+import {sendTicketEmail} from "../../utils/email.utils.js"
+import { sendTicketMessage } from "../../utils/message.utils.js";
 import logger from "../../utils/logger.util.js";
 
 export class CartManagerDAO{
@@ -42,15 +43,17 @@ export class CartManagerDAO{
     }
   }
 
-  async addProductToCart(cid, pid) {
+  async addProductToCart(req, res, cid, pid) {
     try {
-      const cart = await CartModel.findById(cartId);
+		const { user } = req.session;
+      const cart = await CartModel.findById(cid);
       if (!cart) return `No hay carro con ID '${cid}'.`;
 
       const product = await ProductModel.findById(pid);
-			if (!product) return `no hay producto con ID '${pid}'.`;
+		if (!product) return `no hay producto con ID '${pid}'.`;
+	
+		if (user.email == product.owner) return `no puede añadir producto creado por usted`;
 
-      
       const productInCart = cart.products.find((item) => item._id.toString() === product.id);
 
 		if (!productInCart) {
@@ -74,12 +77,25 @@ export class CartManagerDAO{
 		}
   }
 
-  async updateCart(cid, newCart) {
+  async updateCart(req, res, cid, newCart) {
 		try {
+			const { user } = req.session;
 			const cart = await CartModel.findById(cid);
 			if (!cart) return `No hay carro con ese ID '${cid}'.`;
 
 			for (const product of newCart) {
+				const existProduct = await ProductModel.findById(product._id);
+
+				if(!existProduct) {
+					logger.warn(`Producto ${product._id} no existe.`);
+					continue;
+				};
+
+				if (user.email == existProduct.owner) {
+					logger.warn(`no puede añadir producto con ID '${product._id}' , a sido creado por usted`);
+					continue;
+				};
+
 				if (product.quantity < 1) {
 					logger.warn(
 						`'${product.quantity}' es un valor invalido, a sido ajustado a '1'`
@@ -87,7 +103,6 @@ export class CartManagerDAO{
 					product.quantity = 1;
 				}
 
-				const existProduct = await ProductModel.findById(product._id);
 
 				if (existProduct && existProduct.stock < product.quantity) {
 					product.quantity = existProduct.stock;
@@ -96,7 +111,7 @@ export class CartManagerDAO{
 
 				if (existProduct && existProduct.stock >= product.quantity) {
 					const productInCart = cart.products.find(
-						(productInCart) => productInCart.id == existProduct.id
+						productInCart => productInCart.id == existProduct.id
 					);
 
 					if (!productInCart) {
@@ -136,11 +151,11 @@ export class CartManagerDAO{
 			);
 
 			if (!productInCart)
-				return `No product with ID '${pid}' was found in cart '${cid}'`;
+				return `No hay producto con ID '${pid}' encontrado en el carro '${cid}'`;
 
 			if (newQuantity > product.stock) {
 				newQuantity = product.stock;
-				logger.warn(`Insuficient stock, new quantity setted on max stock: '${product.stock}'`)
+				logger.warn(`stock insuficiente, cantidad establecida al maximo: '${product.stock}'`)
 			}
 
 			await CartModel.findByIdAndUpdate(
@@ -155,39 +170,38 @@ export class CartManagerDAO{
 			return `${error}`;
 		}
 	}
+	
+	async clearCart(cid, newCart) {
+		try {
+			const cartM = await CartModel.findById(cid);
+			if (!cartM) return `No se encontro carro con ID '${cid}'.`;
+			await CartModel.findByIdAndUpdate(cid, newCart);
+
+			const updatedCart = await CartModel
+				.findById(cid)
+				.populate('products._id');
+			return updatedCart;
+		} catch (error) {
+			return `${error}`;
+		}
+	}
 
   async removeProductFromCart(cid, pid) {
     try {
-      const cart = await CartModel.findById(cid);
-      if (cart) {
-        const productIndex = cart.products.findIndex((product) => product.pid.toString() === pid);
-        if (productIndex !== -1) {
-          cart.products.splice(productIndex, 1);
-          await cart.save();
-          return cart;
-        }
-      }
-      return null;
-    } catch (error) {
-      console.error("Error al eliminar el producto del carrito:", error);
-      return null;
-    }
+		const cartM = await CartModel.findById(cid);
+		if (!cartM) return `No se encontro carro con ID '${cid}'.`;
+
+		await CartModel.findByIdAndUpdate(cid, {
+			$pull: { products: { _id: pid } },
+		});
+
+		const updatedCart = await CartModel.findById(cid).populate('products._id');
+		return updatedCart;
+	} catch (error) {
+		return `${error}`;
+	}
   }
 
-  async clearCart(cid) {
-    try {
-      const cart = await CartModel.findById(cid);
-      if (cart) {
-        cart.products = [];
-        await cart.save();
-        return cart;
-      }
-      return null;
-    } catch (error) {
-      console.error("Error al limpiar el carrito:", error);
-      return null;
-    }
-  }
 
   async purchaseCart(req, res) {
 		try {
@@ -247,7 +261,8 @@ export class CartManagerDAO{
 				purchaser,
 			};
 
-			await sendEmail(ticket);
+			await sendTicketEmail(ticket);
+			await sendTicketMessage(ticket);
 			const createdTicket = await ticketModel.create(ticket);
 			if (!createdTicket)
 				return `Estos productos no se pueden comprar: ${products}`;

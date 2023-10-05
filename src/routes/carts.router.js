@@ -4,22 +4,22 @@ import roleAuth from "../controllers/role.controller.js";
 
 const router = Router();
 
-router.get("/", cartsController.carts);
+router.get("/", roleAuth('admin'),cartsController.carts);
 
-router.get("/:cid", cartsController.cart);
+router.get("/:cid", roleAuth(['admin', 'premium', 'user']), cartsController.cart);
 
-router.post('/', roleAuth('admin'), cartsController.createCart);
+router.post('/', roleAuth(['admin', 'premium']), cartsController.createCart);
 
-router.post('/:cid/product/:pid', roleAuth('user'), cartsController.addProduct);
+router.post('/:cid/product/:pid', roleAuth(['premium', 'user']), cartsController.addProduct);
 
-router.put('/:cid', roleAuth('user'), cartsController.updateCart);
+router.put('/:cid', roleAuth(['premium', 'user']), cartsController.updateCart);
 
-router.put('/:cid/product/:pid', roleAuth('user'), cartsController.updateProduct);
+router.put('/:cid/product/:pid', roleAuth(['premium', 'user']), cartsController.updateProduct);
 
-router.delete('/:cid', roleAuth('user'), cartsController.clearCart);
+router.delete('/:cid', roleAuth(['premium', 'user']), cartsController.clearCart);
   
-router.delete('/:cid/product/:pid', roleAuth('user'), cartsController.clearProduct);
+router.delete('/:cid/product/:pid', roleAuth(['premium', 'user']), cartsController.clearProduct);
   
-router.post('/:cid/purchase', roleAuth('user'), cartsController.purchase);
+router.post('/:cid/purchase', roleAuth(['premium', 'user']), cartsController.purchase);
 
 export default router;

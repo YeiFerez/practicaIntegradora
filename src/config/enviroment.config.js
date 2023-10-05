@@ -13,4 +13,6 @@ export default {
   PORT: process.env.PORT,
   EMAIL: process.env.EMAIL,
   EMAIL_PASSWORD: process.env.EMAIL_PASSWORD,
+  ACCOUNT_SID: process.env.ACCOUNT_SID,
+	AUTH_TOKEN: process.env.AUTH_TOKEN,
 };

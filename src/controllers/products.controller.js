@@ -1,10 +1,10 @@
 import { successResponse, errorResponse, HTTP_STATUS  } from '../utils/recursos.js';
-import { productsService } from '../services/services.js';
+import { productsRepository } from '../repositories/repository.js';
 
 
 export const getProducts = async (req, res) => {
   try {
-    const payload = await productsService.getProducts();
+    const payload = await productsRepository.getProducts();
     if (typeof payload === 'string') {
       const errorMessage = 'Error fetching products';
       return res.status(HTTP_STATUS.NOT_FOUND).json(errorResponse(errorMessage, payload));
@@ -18,7 +18,7 @@ export const getProducts = async (req, res) => {
 export const getProduct = async (req, res) => {
   try {
     const { pid } = req.params;
-    const payload = await productsService.getProduct(pid);
+    const payload = await productsRepository.getProduct(pid);
     if (typeof payload === 'string') {
       const errorMessage = 'Error fetching product';
       return res.status(HTTP_STATUS.NOT_FOUND).json(errorResponse(errorMessage, payload));
@@ -32,7 +32,7 @@ export const getProduct = async (req, res) => {
 export const insertProductController = async (req, res) => {
   try {
     const newProduct = req.body;
-    const payload = await productsService.createProduct(newProduct);
+    const payload = await productsRepository.createProduct(newProduct);
     if (typeof payload === 'string') {
       const errorMessage = 'Error inserting product';
       return res.status(HTTP_STATUS.NOT_FOUND).json(errorResponse(errorMessage, payload));
@@ -47,7 +47,7 @@ export const editProductController = async (req, res) => {
   try {
     const { pid } = req.params;
     const newProduct = req.body;
-    const payload = await productsService.updateProduct(pid, newProduct);
+    const payload = await productsRepository.updateProduct(pid, newProduct);
     if (typeof payload === 'string') {
       const errorMessage = 'Error editing product';
       return res.status(HTTP_STATUS.NOT_FOUND).json(errorResponse(errorMessage, payload));
@@ -61,7 +61,7 @@ export const editProductController = async (req, res) => {
 export const eraseProductController = async (req, res) => {
   try {
     const { pid } = req.params;
-    const payload = await productsService.deleteProduct(pid);
+    const payload = await productsRepository.deleteProduct(pid);
     if (typeof payload === 'string') {
       const errorMessage = 'Error deleting product';
       return res.status(HTTP_STATUS.NOT_FOUND).json(errorResponse(errorMessage, payload));
@@ -74,7 +74,7 @@ export const eraseProductController = async (req, res) => {
 
 export const mockingProductsController = async (req, res) => {
   try {
-    const payload = await productsService.generateProducts(req, res);
+    const payload = await productsRepository.generateProducts(req, res);
     if (typeof payload === 'string') {
       const errorMessage = 'Error mocking products';
       return res.status(HTTP_STATUS.NOT_FOUND).json(errorResponse(errorMessage, payload));

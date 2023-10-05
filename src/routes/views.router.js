@@ -18,4 +18,6 @@ router.get('/carts/:cid', viewsController.cart);
 
 router.get('/chat', roleAuth('user'), viewsController.chat);
 
+router.get('/restore', roleAuth('user'), viewsController.restore);
+
 export default router;

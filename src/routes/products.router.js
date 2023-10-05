@@ -8,12 +8,12 @@ router.get('/', productsController.getProduct);
 
 router.get('/:pid', productsController.getProducts);
 
-router.post('/', roleAuth('admin'), productsController.insertProductController);
+router.post('/', roleAuth(['admin', 'premium']), productsController.insertProductController);
 
-router.put('/:pid', roleAuth('admin'), productsController.editProductController);
+router.put('/:pid', roleAuth(['admin', 'premium']), productsController.editProductController);
 
-router.delete('/:pid', roleAuth('admin'), productsController.eraseProductController);
+router.delete('/:pid', roleAuth(['admin', 'premium']), productsController.eraseProductController);
 
-router.post('/mockingproducts', productsController.mockingProductsController);
+router.post('/mockingproducts', roleAuth(['admin', 'premium']), productsController.mockingProductsController);
 
 export default router;

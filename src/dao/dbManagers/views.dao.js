@@ -186,4 +186,20 @@ export class ViewsManagerDAO {
 		}
 	}
 
+	async getRestoreDao(req, res) {
+		try {
+			let { restoreCookie } = req.signedCookies;
+			if (!restoreCookie) return res.redirect('/');
+			const { user } = req.session;
+			const payload = {
+				user,
+				style: 'restore.css',
+				title: 'Restore',
+			};
+			return payload;
+		} catch (error) {
+			return `${error}`;
+		}
+	}
+
 }

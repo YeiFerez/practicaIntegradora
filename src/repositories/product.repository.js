@@ -1,7 +1,7 @@
 import { HTTP_STATUS, HttpError  } from "../utils/recursos.js";
 import ProductDTO from "../dto/product.dto.js";
 
-class ProductsService {
+class ProductsRepository {
 	constructor(dao) {
 		this.dao = dao;
 	}
@@ -48,21 +48,21 @@ class ProductsService {
 		}
 	}
 
-	async deleteProduct(pid) {
+	async deleteProduct(req, res, pid) {
 		try {
-			return await this.dao.deleteProduct(pid);
+			return await this.dao.deleteProduct(req, res, pid);
 		} catch (error) {
 			return new HttpError(error.message, HTTP_STATUS.SERVER_ERROR);
 		}
 	}
 
-	async generateProducts() {
+	async generateProducts(req, res) {
 		try {
-			return await this.dao.generateProducts();
+			return await this.dao.generateProducts(req, res);
 		} catch (error) {
 			return new HttpError(error.message, HTTP_STATUS.SERVER_ERROR);
 		}
 	}
 }
 
-export default ProductsService;
+export default ProductsRepository;

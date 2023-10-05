@@ -1,7 +1,7 @@
 import { HTTP_STATUS, HttpError  } from "../utils/recursos.js";
 
 
-class ViewsService {
+class ViewsRepository {
 	constructor(dao) {
 		this.dao = dao;
 	}
@@ -61,6 +61,14 @@ class ViewsService {
 			return `${error}`;
 		}
 	}
+
+	async getRestore(req, res) {
+		try {
+			return await this.dao.getRestoreDao(req, res);
+		} catch (error) {
+			return `${error}`;
+		}
+	}
 }
 
-export default ViewsService;
+export default ViewsRepository;

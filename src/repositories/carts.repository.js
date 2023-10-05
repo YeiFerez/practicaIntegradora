@@ -1,6 +1,6 @@
 import { HTTP_STATUS, HttpError  } from "../utils/recursos.js";
 
-class CartsService {
+class CartsRepository {
 	constructor(dao) {
 		this.dao = dao;
 	}
@@ -32,17 +32,17 @@ class CartsService {
 		}
 	}
 
-	async createProduct(cid, pid) {
+	async createProduct(req, res, cid, pid) {
 		try {
-			return await this.dao.addProductToCart(cid, pid);
+			return await this.dao.addProductToCart(req, res, cid, pid);
 		} catch (error) {
 			return new HttpError(error.message, HTTP_STATUS.SERVER_ERROR);
 		}
 	}
 
-	async updateCart(cid, newCart) {
+	async updateCart(req, res, cid, newCart) {
 		try {
-			return await this.dao.updateCart(cid, newCart);
+			return await this.dao.updateCart(req, res, cid, newCart);
 		} catch (error) {
 			return new HttpError(error.message, HTTP_STATUS.SERVER_ERROR);
 		}
@@ -87,4 +87,4 @@ class CartsService {
 	}
 }
 
-export default CartsService;
+export default CartsRepository;
