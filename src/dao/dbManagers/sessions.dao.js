@@ -52,7 +52,7 @@ export class SessionsManagerDAO {
 			const { user } = req.session;
 			const restoreEmail = user.email;
 			if (!restoreEmail)
-				return `User doen't have an email to send the request.`;
+				return `El usuario no tiene email para enviar la peticion.`;
 
 			const cookieId = faker.database.mongodbObjectId();
 			res.cookie('restoreCookie', cookieId, {
@@ -70,7 +70,7 @@ export class SessionsManagerDAO {
 			const { user } = req.session;
 			const { email, password } = req.body;
 			if (isValidPassword(user, password))
-				return `Can't restore with the same password.`;
+				return `No se puede restaurar con la misma password.`;
 			const newPassword = createHash(password);
 			res.clearCookie('restoreCookie');
 			return await userModel.updateOne({ email }, { password: newPassword });
@@ -83,7 +83,7 @@ export class SessionsManagerDAO {
 		try {
 			const { uid } = req.params;
 			const user = userModel.findById(uid);
-			if(!user) return `User doesn't exist.`
+			if(!user) return `Usuario no existe.`
 			return await userModel.updateOne({ _id: uid }, { role: 'premium' });
 		} catch (error) {
 			return `${error}`;
@@ -94,7 +94,7 @@ export class SessionsManagerDAO {
 		try {
 			const { uid } = req.params;
 			const user = userModel.findById(uid);
-			if(!user) return `User doesn't exist.`
+			if(!user) return `Usuario no existe.`
 			return await userModel.updateOne({ _id: uid }, { role: 'user' });
 		} catch (error) {
 			return `${error}`;

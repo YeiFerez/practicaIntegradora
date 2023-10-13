@@ -1,5 +1,5 @@
-import CartModel from "../models/carts.model.js";
-import ProductModel from "../models/products.model.js";
+import cartModel from "../models/carts.model.js";
+import productModel from "../models/products.model.js";
 import ticketModel from "../models/ticket.model.js";
 import { getAmount } from "../../utils/recursos.js";
 import UserDTO from "../../dto/user.dto.js";
@@ -12,7 +12,7 @@ export class CartManagerDAO{
 
   async getAllCarts() {
     try {
-			const carts = await CartModel.find().populate('products._id');
+			const carts = await cartModel.find().populate('products._id');
 			if (!carts) return `No se encuentran los carts.`;
 			return carts;
     } catch (error) {
@@ -23,7 +23,7 @@ export class CartManagerDAO{
 
   async getCartById(cid) {
     try {
-      const cart = await CartModel.findById(cid).populate('products._id');
+      const cart = await cartModel.findById(cid).populate('products._id');
       if (!cart) return `Carrito no encontrado con el id '${cid}'.`;
 			return cart;
     } catch (error) {
@@ -34,7 +34,7 @@ export class CartManagerDAO{
 
   async createCart(cart) {
     try {
-      const newCart = await CartModel.create(cart);
+      const newCart = await cartModel.create(cart);
       if (!newCart) return `No hay carrito creado.`;
 			return newCart;
     } catch (error) {
@@ -46,10 +46,10 @@ export class CartManagerDAO{
   async addProductToCart(req, res, cid, pid) {
     try {
 		const { user } = req.session;
-      const cart = await CartModel.findById(cid);
+      const cart = await cartModel.findById(cid);
       if (!cart) return `No hay carro con ID '${cid}'.`;
 
-      const product = await ProductModel.findById(pid);
+      const product = await productModel.findById(pid);
 		if (!product) return `no hay producto con ID '${pid}'.`;
 	
 		if (user.email == product.owner) return `no puede añadir producto creado por usted`;
@@ -60,17 +60,17 @@ export class CartManagerDAO{
 			const create = {
 				$push: { products: { _id: product.id, quantity: 1 } },
 			};
-			await CartModel.findByIdAndUpdate({ _id: cid }, create);
-      return await CartModel.findById(cid);
+			await cartModel.findByIdAndUpdate({ _id: cid }, create);
+      return await cartModel.findById(cid);
 		};
 
-		await CartModel.findByIdAndUpdate(
+		await cartModel.findByIdAndUpdate(
 			{ _id: cid },
 			{ $inc: { "products.$[elem].quantity": 1 } },
 			{ arrayFilters: [{ "elem._id": product.id }] }
 		);
 
-		const updatedCart = await CartModel.findById(cid).populate('products._id');
+		const updatedCart = await cartModel.findById(cid).populate('products._id');
 			return updatedCart;
     } catch (error) {
 			return `${error}`;
@@ -80,11 +80,11 @@ export class CartManagerDAO{
   async updateCart(req, res, cid, newCart) {
 		try {
 			const { user } = req.session;
-			const cart = await CartModel.findById(cid);
+			const cart = await cartModel.findById(cid);
 			if (!cart) return `No hay carro con ese ID '${cid}'.`;
 
 			for (const product of newCart) {
-				const existProduct = await ProductModel.findById(product._id);
+				const existProduct = await productModel.findById(product._id);
 
 				if(!existProduct) {
 					logger.warn(`Producto ${product._id} no existe.`);
@@ -120,10 +120,10 @@ export class CartManagerDAO{
 								products: { _id: existProduct.id, quantity: product.quantity },
 							},
 						};
-						await CartModel.findByIdAndUpdate({ _id: cid }, create);
+						await cartModel.findByIdAndUpdate({ _id: cid }, create);
 					}
 
-					await CartModel.findByIdAndUpdate(
+					await cartModel.findByIdAndUpdate(
 						{ _id: cid },
 						{ $set: { 'products.$[elem].quantity': product.quantity } },
 						{ arrayFilters: [{ 'elem._id': existProduct.id }] }
@@ -131,7 +131,7 @@ export class CartManagerDAO{
 				}
 			}
 
-			const updatedCart = await CartModel.findById(cid).populate('products._id');
+			const updatedCart = await cartModel.findById(cid).populate('products._id');
 			return updatedCart;
 		} catch (error) {
 			return `${error}`;
@@ -140,10 +140,10 @@ export class CartManagerDAO{
 
   async updateProductQuantity(cid, pid, newQuantity) {
     try {
-			const cart = await CartModel.findById(cid);
+			const cart = await cartModel.findById(cid);
 			if (!cart) return `No hay carro con el ID '${cid}'.`;
 
-			const product = await ProductModel.findById(pid);
+			const product = await productModel.findById(pid);
 			if (!product) return `no se encontro producto con el ID '${pid}'.`;
 
 			const productInCart = cart.products.find(
@@ -158,13 +158,13 @@ export class CartManagerDAO{
 				logger.warn(`stock insuficiente, cantidad establecida al maximo: '${product.stock}'`)
 			}
 
-			await CartModel.findByIdAndUpdate(
+			await cartModel.findByIdAndUpdate(
 				{ _id: cid },
 				{ $set: { 'products.$[elem].quantity': newQuantity } },
 				{ arrayFilters: [{ 'elem._id': pid }] }
 			);
 
-			const updatedCart = await CartModel.findById(cid).populate('products._id');
+			const updatedCart = await cartModel.findById(cid).populate('products._id');
 			return updatedCart;
 		} catch (error) {
 			return `${error}`;
@@ -173,11 +173,11 @@ export class CartManagerDAO{
 	
 	async clearCart(cid, newCart) {
 		try {
-			const cartM = await CartModel.findById(cid);
+			const cartM = await cartModel.findById(cid);
 			if (!cartM) return `No se encontro carro con ID '${cid}'.`;
-			await CartModel.findByIdAndUpdate(cid, newCart);
+			await cartModel.findByIdAndUpdate(cid, newCart);
 
-			const updatedCart = await CartModel
+			const updatedCart = await cartModel
 				.findById(cid)
 				.populate('products._id');
 			return updatedCart;
@@ -188,14 +188,14 @@ export class CartManagerDAO{
 
   async removeProductFromCart(cid, pid) {
     try {
-		const cartM = await CartModel.findById(cid);
+		const cartM = await cartModel.findById(cid);
 		if (!cartM) return `No se encontro carro con ID '${cid}'.`;
 
-		await CartModel.findByIdAndUpdate(cid, {
+		await cartModel.findByIdAndUpdate(cid, {
 			$pull: { products: { _id: pid } },
 		});
 
-		const updatedCart = await CartModel.findById(cid).populate('products._id');
+		const updatedCart = await cartModel.findById(cid).populate('products._id');
 		return updatedCart;
 	} catch (error) {
 		return `${error}`;
@@ -207,7 +207,7 @@ export class CartManagerDAO{
 		try {
 			const { user } = req.session;
 			const { cid } = req.params;
-			const cart = await CartModel.findById(cid).populate('products._id');
+			const cart = await cartModel.findById(cid).populate('products._id');
 			if (!cart) return `no se encontro carrito con ID '${cid}'.`;
 			if (cart.length < 1) return `carrito vacio.`;
 
@@ -215,7 +215,7 @@ export class CartManagerDAO{
 			const products = cart.products;
 			for (const product of products) {
 				const productId = product._id._id;
-				const existProduct = await ProductModel.findById(productId);
+				const existProduct = await productModel.findById(productId);
 				const productStock = existProduct.stock;
 				const productQuantity = product.quantity;
 
@@ -230,11 +230,11 @@ export class CartManagerDAO{
 					productStock > 0
 				) {
 					const newStock = productStock - productQuantity;
-					await ProductModel.findByIdAndUpdate(productId, {
+					await productModel.findByIdAndUpdate(productId, {
 						$set: { stock: newStock },
 					});
 
-					await CartModel.findByIdAndUpdate(cid, {
+					await cartModel.findByIdAndUpdate(cid, {
 						$pull: { products: { _id: productId } },
 					});
 

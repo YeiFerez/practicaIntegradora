@@ -13,4 +13,21 @@ router.get('/', (req, res) => {
   return res.status(200).json({ status: 'success', message: 'log printed'})
 });
 
+router.get('/operation/simple', (req, res) => {
+	let result = 0;
+	for (let i = 0; i < 1000000; i++) {
+		result += 1;
+	}
+	return res.status(200).json({ status: 'success', result });
+});
+
+router.get('/operation/complex', (req, res) => {
+	let result = 0;
+	for (let i = 0; i < 5e8; i++) {
+		result += 1;
+	}
+	return res.status(200).json({ status: 'success', result });
+});
+
+
 export default router;

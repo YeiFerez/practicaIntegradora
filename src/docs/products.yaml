@@ -1,0 +1,70 @@
+paths:
+  /api/products/:
+    get:
+      summary: Mostrar todos los productos
+      tags:
+        - Products
+      responses:
+        '200':
+          description: Muestra una lista de todos los productos disponibles en el sistema.
+        '404':
+          description: Muestra un mensaje de error si no se encuentran productos.
+        '500':
+          description: Error del servidor al intentar obtener los productos.
+    post:
+      summary: Crear nuevo producto
+      tags:
+        - Products
+      responses:
+        '200':
+          description: Nuevo producto creado con éxito.
+        '404':
+          description: Muestra un mensaje de error si la creación del producto falla.
+        '500':
+          description: Error del servidor al intentar crear un nuevo producto.
+  /api/products/:pid:
+    get:
+      summary: Mostrar producto por ID
+      tags:
+        - Products
+      responses:
+        '200':
+          description: Muestra detalles de un producto específico identificado por su ID.
+        '404':
+          description: Muestra un mensaje de error si el producto con el ID especificado no se encuentra.
+        '500':
+          description: Error del servidor al intentar obtener el producto por ID.
+    put:
+      summary: Actualizar producto
+      tags:
+        - Products
+      responses:
+        '200':
+          description: Producto actualizado con éxito.
+        '404':
+          description: Muestra un mensaje de error si la actualización del producto falla.
+        '500':
+          description: Error del servidor al intentar actualizar el producto.
+    delete:
+      summary: Eliminar producto
+      tags:
+        - Products
+      responses:
+        '200':
+          description: Producto eliminado con éxito.
+        '404':
+          description: Muestra un mensaje de error si la eliminación del producto falla.
+        '500':
+          description: Error del servidor al intentar eliminar el producto.
+  /api/products/mockingproducts:
+    post:
+      summary: Crear 100 productos aleatorios de prueba
+      tags:
+        - Products
+      responses:
+        '200':
+          description: Se crean 100 productos de prueba exitosamente.
+        '404':
+          description: Muestra un mensaje de error si la creación de productos de prueba falla.
+        '500':
+          description: Error del servidor al intentar crear productos de prueba.

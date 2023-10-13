@@ -31,7 +31,12 @@ export const getProduct = async (req, res) => {
 
 export const insertProductController = async (req, res) => {
   try {
-    const newProduct = req.body;
+    const productInfo = req.body;
+		const { user } = req.session;
+		const newProduct = {
+			...productInfo,
+			owner: user.email
+		}
     const payload = await productsRepository.createProduct(newProduct);
     if (typeof payload === 'string') {
       const errorMessage = 'Error inserting product';
@@ -61,7 +66,7 @@ export const editProductController = async (req, res) => {
 export const eraseProductController = async (req, res) => {
   try {
     const { pid } = req.params;
-    const payload = await productsRepository.deleteProduct(pid);
+    const payload = await productsRepository.deleteProduct(req, res, pid);
     if (typeof payload === 'string') {
       const errorMessage = 'Error deleting product';
       return res.status(HTTP_STATUS.NOT_FOUND).json(errorResponse(errorMessage, payload));

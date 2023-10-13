@@ -67,7 +67,7 @@ export  class ProductsManagerDAO {
 			await productModel.deleteOne({ _id: pid });
 			const productDeleted = await productModel.findById(pid);
 
-			if (productDeleted) return `No product was deleted.`;
+			if (productDeleted) return `No se elimino producto.`;
 			const products = await productModel.find();
 			return products;
 		} catch (error) {
@@ -93,7 +93,7 @@ export  class ProductsManagerDAO {
 			}
 
 			const products = await productModel.find();
-			if (!products) return `No products were created.`;
+			if (!products) return `No se creo producto.`;
 			return products;
 		} catch (error) {
 			return `${error}`;

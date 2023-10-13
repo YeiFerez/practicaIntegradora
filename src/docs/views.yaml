@@ -1,0 +1,97 @@
+paths:
+  /:
+    get:
+      summary: Home
+      tags:
+        - Views
+      responses:
+        '200':
+          description: Muestra la vista de inicio.
+        '404':
+          description: Muestra un mensaje de error.
+        '500':
+          description: Error del servidor.
+  /login:
+    get:
+      summary: Login
+      tags:
+        - Views
+      responses:
+        '200':
+          description: Muestra la vista de inicio de sesión.
+        '404':
+          description: Muestra un mensaje de error.
+        '500':
+          description: Error del servidor.
+  /register:
+    get:
+      summary: Register
+      tags:
+        - Views
+      responses:
+        '200':
+          description: Muestra la vista de registro.
+        '404':
+          description: Muestra un mensaje de error.
+        '500':
+          description: Error del servidor.
+  /chat:
+    get:
+      summary: Chat
+      tags:
+        - Views
+      responses:
+        '200':
+          description: Muestra la vista de chat.
+        '404':
+          description: Muestra un mensaje de error.
+        '500':
+          description: Error del servidor.
+  /products:
+    get:
+      summary: Products
+      tags:
+        - Views
+      responses:
+        '200':
+          description: Muestra la vista de productos.
+        '404':
+          description: Muestra un mensaje de error.
+        '500':
+          description: Error del servidor.
+  /product/:pid:
+    get:
+      summary: Product by ID
+      tags:
+        - Views
+      responses:
+        '200':
+          description: Muestra la vista de un producto específico.
+        '404':
+          description: Muestra un mensaje de error.
+        '500':
+          description: Error del servidor.
+  /cart/:cid:
+    get:
+      summary: Cart by ID
+      tags:
+        - Views
+      responses:
+        '200':
+          description: Muestra la vista del carrito.
+        '404':
+          description: Muestra un mensaje de error.
+        '500':
+          description: Error del servidor.
+  /restore:
+    get:
+      summary: Restore
+      tags:
+        - Views
+      responses:
+        '200':
+          description: Muestra la vista de restauración.
+        '404':
+          description: Muestra un mensaje de error.
+        '500':
+          description: Error del servidor.

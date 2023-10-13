@@ -1,0 +1,25 @@
+paths:
+  /api/tests/logs:
+    get:
+      summary: Probar todos los niveles de registros
+      tags:
+        - Tests
+      responses:
+        '200':
+          description: Muestra todos los niveles de registros en la consola.
+  /api/tests/operation/simple:
+    get:
+      summary: Operación simple
+      tags:
+        - Tests
+      responses:
+        '200':
+          description: Muestra el resultado de la operación simple.
+  /api/tests/operation/complex:
+    get:
+      summary: Operación compleja
+      tags:
+        - Tests
+      responses:
+        '200':
+          description: Muestra el resultado de la operación compleja.

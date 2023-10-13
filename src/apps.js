@@ -10,6 +10,8 @@ import morgan from "morgan";
 import cors from "cors"
 import router from "./routes/router.js";
 import logger from "./utils/logger.util.js";
+import swaggerJSDoc from "swagger-jsdoc";
+import swaggerUiExpress from 'swagger-ui-express';
 
 // Rutas
 import productRouter from "./routes/products.router.js";
@@ -23,6 +25,21 @@ const cookieSecret = config.COOKIE_SECRET;
 const PORT = config.PORT;
 const mongoUrl = config.MONGO_URL;
 const mongoSessionSecret = config.MONGO_SESSION_SECRET;
+
+
+const swaggerOptions = {
+	definition: {
+		openaip: '1.0.0',
+		info: {
+			title: 'API documentation',
+			version: '1.0.0',
+			description:
+				'Servidor backend',
+		},
+	},
+	apis: [`${__dirname}/docs/*.yaml`],
+};
+const specs = swaggerJSDoc(swaggerOptions);
 
 const app = express();
 
@@ -66,6 +83,7 @@ app.use(express.urlencoded({extended:true}))
 app.use(cookieParser(cookieSecret));
 app.use(morgan('dev'));
 app.use(cors());
+app.use('/docs', swaggerUiExpress.serve, swaggerUiExpress.setup(specs));
 // app.use('/',viewRouter)
 // app.use('/api/sessions',sessionRouter)
 // app.use("/api/products", productRouter);

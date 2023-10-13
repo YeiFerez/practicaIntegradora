@@ -4,9 +4,9 @@
   <p>{{user.email}}</p>
 
   <ul class="home-list">
-    <li class="home-item"> <a href="./products">Products</a></li>
-    <li class="home-item"> <a href="./chat">Chat</a></li>
-    <li class="home-item"> <a href="./carts/">Carts (has to add the cart id)</a></li>
+    <li class="home-item"> <a href="/products">Products</a></li>
+    <li class="home-item"> <a href="/chat">Chat</a></li>
+    <li class="home-item"> <a href='/cart/{{cart}}'>Cart</a></li>
   </ul>
   <form action="/api/sessions/logout" method="POST">
             <input type="submit" value="Logout">

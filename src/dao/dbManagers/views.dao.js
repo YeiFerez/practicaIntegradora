@@ -156,7 +156,7 @@ export class ViewsManagerDAO {
 				header: true,
 				cart: cid,
 				style: "carts.css",
-				title: "Carts",
+				title: "Cart",
 				helpers: {
 					multiply,
 					getTotal

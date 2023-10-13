@@ -1,0 +1,104 @@
+paths:
+  /api/carts/:
+    get:
+      summary: Mostrar todos los carts
+      tags:
+        - Carts
+      responses:
+        '200':
+          description: Obtiene una lista de todos los carritos existentes en el sistema.
+        '404':
+          description: Muestra un mensaje de error si no se encuentran carritos.
+        '500':
+          description: Error del servidor al intentar obtener los carritos.
+    post:
+      summary: Crear nuevo carrito
+      tags:
+        - Carts
+      responses:
+        '200':
+          description: Crea un nuevo carrito y devuelve información sobre el carrito recién creado.
+        '404':
+          description: Muestra un mensaje de error si la creación del carrito falla.
+        '500':
+          description: Error del servidor al intentar crear un nuevo carrito.
+  /api/carts/:cid:
+    get:
+      summary: Mostrar carrito por ID
+      tags:
+        - Carts
+      responses:
+        '200':
+          description: Obtiene información detallada de un carrito específico identificado por su ID.
+        '404':
+          description: Muestra un mensaje de error si el carrito con el ID especificado no se encuentra.
+        '500':
+          description: Error del servidor al intentar obtener el carrito por ID.
+    put:
+      summary: Actualizar carrito
+      tags:
+        - Carts
+      responses:
+        '200':
+          description: Actualiza la información de un carrito existente y devuelve los detalles actualizados.
+        '404':
+          description: Muestra un mensaje de error si la actualización del carrito falla.
+        '500':
+          description: Error del servidor al intentar actualizar el carrito.
+    delete:
+      summary: Eliminar carrito
+      tags:
+        - Carts
+      responses:
+        '200':
+          description: Elimina un carrito existente y devuelve una confirmación de eliminación.
+        '404':
+          description: Muestra un mensaje de error si la eliminación del carrito falla.
+        '500':
+          description: Error del servidor al intentar eliminar el carrito.
+  /api/carts/:cid/product/:pid:
+    post:
+      summary: Agregar producto al carrito por IDs
+      tags:
+        - Carts
+      responses:
+        '200':
+          description: Agrega un producto a un carrito identificado por sus IDs y devuelve información actualizada del carrito.
+        '404':
+          description: Muestra un mensaje de error si la adición del producto al carrito falla.
+        '500':
+          description: Error del servidor al intentar agregar el producto al carrito.
+    put:
+      summary: Actualizar producto en el carrito por IDs
+      tags:
+        - Carts
+      responses:
+        '200':
+          description: Actualiza la cantidad de un producto en un carrito identificado por sus IDs y devuelve información actualizada del carrito.
+        '404':
+          description: Muestra un mensaje de error si la actualización del producto en el carrito falla.
+        '500':
+          description: Error del servidor al intentar actualizar el producto en el carrito.
+    delete:
+      summary: Eliminar producto en el carrito por IDs
+      tags:
+        - Carts
+      responses:
+        '200':
+          description: Elimina un producto de un carrito identificado por sus IDs y devuelve información actualizada del carrito.
+        '404':
+          description: Muestra un mensaje de error si la eliminación del producto del carrito falla.
+        '500':
+          description: Error del servidor al intentar eliminar el producto del carrito.
+  /api/carts/:cid/purchase:
+    post:
+      summary: Comprar carrito
+      tags:
+        - Carts
+      responses:
+        '200':
+          description: Marca un carrito como comprado y proporciona detalles de la compra.
+        '404':
+          description: Muestra un mensaje de error si la compra del carrito falla.
+        '500':
+          description: Error del servidor al intentar realizar la compra del carrito.

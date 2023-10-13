@@ -1,25 +1,27 @@
 const registerForm = document.getElementById("registerForm");
 
-registerForm.addEventListener("submit", (event) => {
-  event.preventDefault();
-  const data = new FormData(registerForm);
-  const obj = {};
-  data.forEach((value, key) => (obj[key] = value));
+registerForm.addEventListener('submit', async event => {
+	event.preventDefault();
+	const data = new FormData(registerForm);
+	const obj = {};
+	data.forEach((value, key) => (obj[key] = value));
 
-  fetch("/api/sessions/register", {
-    method: "POST",
-    body: JSON.stringify(obj),
-    headers: {
-      "Content-Type": "application/json",
-    },
-  }).then((response) => {
-    if (response.status === 401) {
-      alert(`The email you entered already exists. Please use a different email.`);
-    } else {
-      alert(`Registration successful! You can now log in.`);
-      window.location.replace("/");
-    }
-  }).catch((err) => {
-    alert(`An error occurred: ${err}`);
-  });
+	await fetch('/api/sessions/register', {
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json',
+		},
+		body: JSON.stringify(obj),
+	})
+		.then(res => {
+			if (res.status !== 200) return res.text();
+			return res.json();
+		})
+		.then(payload => {
+			if (typeof payload == 'string') return alert(payload);
+			return window.location.replace('/');
+		})
+		.catch(err => {
+			return `Catch error: ${err}`;
+		});
 });

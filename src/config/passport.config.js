@@ -58,6 +58,7 @@ const initializePassport = () => {
 						password: createHash(password),
 						role: 'user',
 					});
+					req.session.user = newUser;
 					return done(null, newUser);
 				} catch (err) {
 					return done(err);
@@ -70,17 +71,19 @@ const initializePassport = () => {
 	passport.use(
 		'login',
 		new LocalStrategy(
-			{ usernameField: 'email' },
-			async (username, password, done) => {
+			{  passReqToCallback: true, usernameField: 'email' },
+			async (req, username, password, done) => {
 				try {
 					if (username == 'adminDan@gmail.com') {
 						const admin = await adminModel.findOne({ email: username });
 						if (!admin || !isValidPassword(admin, password)) return done(null, false, `credenciales invalidas.`);
+						req.session.user = admin;
 						return done(null, admin);
 					};
 
 					const user = await userModel.findOne({ email: username });
 					if (!user || !isValidPassword(user, password)) return done(null, false, `credenciales invalidas.`);
+					req.session.user = user;
 					return done(null, user);
 				} catch (err) {
 					return done(err);
@@ -107,6 +110,7 @@ const initializePassport = () => {
 							password: '',
 						});
 					}
+					req.session.user = user;
 					return done(null, user);
 				} catch (err) {
 					return done(err);

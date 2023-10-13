@@ -23,10 +23,10 @@ export const sendTicketEmail = async ticket => {
 		const emailContent = {
 			from: EMAIL,
 			to: `${userEmail}`,
-			subject: 'Thanks for your order',
+			subject: 'Gracias por tu orden',
 			html: `
 			<div>
-				<p>Your order was processed</p>
+				<p>Tu orden fue procesada</p>
 				<p>Order code: ${orderCode}</p>
 				<p>Total: $${orderAmount}</p>
 			</div>
@@ -45,12 +45,12 @@ export const sendRestoreEmail = async (restoreEmail) => {
 		const emailContent = {
 			from: EMAIL,
 			to: `${restoreEmail}`,
-			subject: 'Create new password',
+			subject: 'Crea una nueva contraseña',
 			html: `
 			<div>
-				<p>To create a new password, visit this link:</p>
-				<a href="http://localhost:${PORT}/restore">Create new password</a>
-				<p>The link expires in 1 hour</p>
+				<p>Para crear una nueva contraseña ingresa en este link:</p>
+				<a href="http://localhost:${PORT}/restore">Crea una nueva contraseña</a>
+				<p>Este link expira en 1 hora</p>
 			</div>
 			`,
 		};
