@@ -1,6 +1,6 @@
 import { getDAOS } from "../dao/dbManagers/indexDAO.js";
 
-const {cartsDAO, productsDAO, sessionsDAO, viewsDao} = getDAOS();
+const {cartsDAO, productsDAO, sessionsDAO, viewsDao, usersDAO} = getDAOS();
 
 import ProductsRepository from "./product.repository.js";
 export const productsRepository = new ProductsRepository(productsDAO);
@@ -13,3 +13,6 @@ export const viewsRepository = new ViewsRepository(viewsDao);
 
 import SessionsRepository from "./sessions.repository.js";
 export const sessionsRepository = new SessionsRepository(sessionsDAO);
+
+import UsersRepository from "./users.repository.js";
+export const usersRepository = new UsersRepository(usersDAO)

@@ -69,6 +69,14 @@ class ViewsRepository {
 			return `${error}`;
 		}
 	}
+
+	async getUpload(req, res) {
+		try {
+			return await this.dao.getUploadDao(req, res);
+		} catch (error) {
+			return `${error}`;
+		}
+	}
 }
 
 export default ViewsRepository;

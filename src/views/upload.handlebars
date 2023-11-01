@@ -1,0 +1,27 @@
+
+<div class="form-container">
+  <form action="/api/users/{{user._id}}/documents" method="POST" enctype="multipart/form-data">
+  <select name="documentName">
+    <option value="Identificación">Identificación</option>
+    <option value="Comprobante de domicilio">Comprobante de domicilio</option>
+    <option value="Comprobante de estado de cuenta">Comprobante de estado de cuenta</option>
+  </select>
+  <input type="file" name="documents" multiple>
+  <button type="submit">Cargar Documentos</button>
+</form>
+</div>
+
+
+<div class="form-container">
+<form action="/api/users/{{user._id}}/profiles" method="POST" enctype="multipart/form-data">
+  <input type="file" name="profile">
+  <button type="submit">Cargar Imagen de Perfil</button>
+</form>
+</div>
+
+<div class="form-container">
+<form action="/api/users/{{user._id}}/products" method="POST" enctype="multipart/form-data">
+  <input type="file" name="product">
+  <button type="submit">Cargar Imagen de Producto</button>
+</form>
+</div>

@@ -202,4 +202,19 @@ export class ViewsManagerDAO {
 		}
 	}
 
+	async getUploadDao(req, res) {
+		try {
+			const { user } = req.session;
+			const payload = {
+				user,
+				style: "upload.css",
+				title: "upload",
+                
+			}
+			return payload;
+		} catch (error) {
+			return `${error}`;
+		}
+	}
+
 }

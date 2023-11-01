@@ -99,6 +99,19 @@ export const restore = async (req, res) => {
 	}
 };
 
+export const upload = async (req, res) => {
+	try {
+		const { user } = req.session;
+		if (!user) return res.redirect('/');
+		const payload = await viewsRepository.getUpload(req, res);
+		if (typeof payload == 'string')
+			return res.status(404).json({ status: 'error', message: payload });
+		return res.status(200).render('upload', payload);
+	} catch (err) {
+		return res.status(500).json({ status: 'error', error: err.message });
+	}
+};
+
 export default {
 	home,
 	login,
@@ -107,5 +120,6 @@ export default {
 	products,
 	product,
 	cart,
-    restore
+    restore,
+    upload
   };

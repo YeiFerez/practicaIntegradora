@@ -57,6 +57,7 @@ export const githubCallback = async (req, res) => {
 
 export const logout = async (req, res) => {
 	try {
+		
 		const payload = await sessionsRepository.getLogout(req, res);
 		if (typeof payload == 'string') return res.status(HTTP_STATUS.NOT_FOUND).json(errorResponse(payload));
 		res.clearCookie('userId', { signed: true });
@@ -88,27 +89,7 @@ export const restoreCallback = async (req, res) => {
 	}
 };
 
-export const premium = async (req, res) => {
-	try {
-		const payload = await sessionsRepository.getPremium(req, res);
-		if (typeof payload == 'string')
-			return res.status(HTTP_STATUS.NOT_FOUND).json(errorResponse(payload));
-		return res.redirect('/');
-	} catch (err) {
-		return res.status(HTTP_STATUS.SERVER_ERROR).json(errorResponse(err.message));
-	}
-};
 
-export const user = async (req, res) => {
-	try {
-		const payload = await sessionsRepository.getUser(req, res);
-		if (typeof payload == 'string')
-			return res.status(HTTP_STATUS.NOT_FOUND).json(errorResponse(payload));
-		return res.redirect('/');
-	} catch (err) {
-		return res.status(HTTP_STATUS.SERVER_ERROR).json(errorResponse(err.message));
-	}
-};
 
 export default {
 	login,
@@ -119,6 +100,4 @@ export default {
 	githubCallback,
 	restore,
 	restoreCallback,
-	premium,
-	user
   };

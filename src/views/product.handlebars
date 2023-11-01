@@ -1,15 +1,16 @@
-<div class='custom-product-container'>
-	<div class='custom-product-item'>
-		<h2>Product Name: {{product.name}}</h2>
-		<p class='custom-product-description'>Description: {{product.description}}</p>
-		<p class='custom-product-price'>$ {{product.price}}</p>
-		<p class='custom-product-stock'>Stock: {{product.stock}}</p>
-		<p class='custom-product-category'>Category: {{product.category}}</p>
+<div class='product-container'>
+	<div class='product-item'>
+		<p>Product: {{product.name}}</p>
+		<p>Description: {{product.description}}</p>
+		<p>Price: ${{product.price}}</p>
+		<p>Stock: {{product.stock}}</p>
+		<p>Category: {{product.category}}</p>
 	</div>
 
-	<form class='custom-product-form' cart='{{cart}}' product='{{product._id}}'>
-		<button class='custom-product-button'>Add to Cart</button>
+	<form class='product-form' cart='{{cart}}' product='{{product._id}}'>
+		<input type='submit' value='Add to cart' class='product-button' />
 	</form>
+
 </div>
 
 <script src='/js/products.js'></script>

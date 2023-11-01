@@ -84,6 +84,8 @@ const initializePassport = () => {
 					const user = await userModel.findOne({ email: username });
 					if (!user || !isValidPassword(user, password)) return done(null, false, `credenciales invalidas.`);
 					req.session.user = user;
+					user.last_connection = new Date();
+                	await user.save();
 					return done(null, user);
 				} catch (err) {
 					return done(err);

@@ -15,6 +15,13 @@ const userSchema = new mongoose.Schema({
 		type: String,
 		default: "user",
 	},
+	documents: [
+        {
+            name: String,
+            reference: String,
+        }
+    ],
+	last_connection: Date,
 })
 const userModel= mongoose.model(userCollection,userSchema)
 export default userModel;

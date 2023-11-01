@@ -72,21 +72,7 @@ class SessionsRepository {
 		}
 	}
 
-	async getPremium(req, res) {
-		try {
-			return await this.dao.getPremiumDao(req, res);
-		} catch (error) {
-			return new HttpError(error.message, HTTP_STATUS.SERVER_ERROR);
-		}
-	}
-
-	async getUser(req, res) {
-		try {
-			return await this.dao.getUserDao(req, res);
-		} catch (error) {
-			return new HttpError(error.message, HTTP_STATUS.SERVER_ERROR);
-		}
-	}
+	
 }
 
 export default SessionsRepository;

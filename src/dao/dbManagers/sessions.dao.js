@@ -10,6 +10,9 @@ export class SessionsManagerDAO {
 	async getLogin(req, res) {
 		try {
 			return await passportCall(req, res, 'login')
+			
+        
+			
 		} catch (error) {
 			return `${error}`;
 		}
@@ -41,11 +44,31 @@ export class SessionsManagerDAO {
 
 	async getLogout(req, res) {
 		try {
-			return req.session.destroy();
+		  const { user } = req.session;
+	  
+		  if (user) {
+			// Cargar el usuario nuevamente desde la base de datos usando su ID
+			const userId = user._id; // Suponiendo que _id es el campo de identificación único del usuario
+	  
+			// Cargar el usuario desde la base de datos
+			const userFromDB = await userModel.findById(userId);
+	  
+			if (userFromDB) {
+			  // Actualizar last_connection en el usuario
+			  userFromDB.last_connection = new Date();
+			  await userFromDB.save(); // Guardar los cambios en la base de datos
+			} else {
+			  console.log('Usuario no encontrado en la base de datos.');
+			}
+		  }
+	  
+		  // Destruir la sesión
+		  req.session.destroy();
 		} catch (error) {
-			return `${error}`;
+		  return `${error}`;
 		}
-	}
+	  }
+	  
 
 	async getRestoreDao(req, res) {
 		try {
@@ -79,25 +102,5 @@ export class SessionsManagerDAO {
 		}
 	}
 
-	async getPremiumDao(req, res) {
-		try {
-			const { uid } = req.params;
-			const user = userModel.findById(uid);
-			if(!user) return `Usuario no existe.`
-			return await userModel.updateOne({ _id: uid }, { role: 'premium' });
-		} catch (error) {
-			return `${error}`;
-		}
-	}
 
-	async getUserDao(req, res) {
-		try {
-			const { uid } = req.params;
-			const user = userModel.findById(uid);
-			if(!user) return `Usuario no existe.`
-			return await userModel.updateOne({ _id: uid }, { role: 'user' });
-		} catch (error) {
-			return `${error}`;
-		}
-	}
 }
