@@ -16,6 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 if (response.ok) {
                     console.log('Cart cleared successfully.');
+                    location.reload();
                 } else {
                     console.error('Failed to clear cart.');
                 }
