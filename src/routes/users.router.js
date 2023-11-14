@@ -18,7 +18,11 @@ router.post("/:uid/profiles",roleAuth(["premium", "user"]), upload.single('profi
 // Ruta para cargar imágenes de productos
 router.post("/:uid/products",roleAuth(["premium", "user"]), upload.single('product'), usersController.uploadfile);
 
+router.get("/", roleAuth("admin"), usersController.getAllUser);
 
+router.delete("/deleteInactive",roleAuth('admin'), usersController.deleteInactiveUsers);
+
+router.delete('/:uid', roleAuth('admin'), usersController.deleteUser);
 
 
 export default router;

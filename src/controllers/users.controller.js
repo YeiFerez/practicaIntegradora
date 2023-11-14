@@ -39,11 +39,37 @@ export const uploadfile = async (req, res) => {
 	}
 };
 
+export const getAllUser = async (req, res) => {
+	try {
+		await usersRepository.getAllUsers(req, res);
+	} catch (err) {
+		return res.status(HTTP_STATUS.SERVER_ERROR).json(errorResponse(err.message));
+	}
+};
+
+export const deleteInactiveUsers = async (req, res) => {
+	try {
+		await usersRepository.deleteInactiveUser(req, res);
+	} catch (err) {
+		return res.status(HTTP_STATUS.SERVER_ERROR).json(errorResponse(err.message));
+	}
+};
+
+export const deleteUser = async (req, res) => {
+	try {
+		await usersRepository.deleteUsers(req, res);
+	} catch (err) {
+		return res.status(HTTP_STATUS.SERVER_ERROR).json(errorResponse(err.message));
+	}
+};
 
 
 export default {
 	premium,
     user,
 	upload,
-	uploadfile
+	uploadfile,
+	getAllUser,
+	deleteInactiveUsers,
+	deleteUser
   };

@@ -1,4 +1,6 @@
 import userModel from "../models/Users.model.js";
+import { sendAccountDeletionEmail } from "../../utils/email.utils.js";
+
 
 export class UsersManagerDAO {
 
@@ -119,4 +121,64 @@ async uploadFileDao(req, res) {
     }
 }
 
+async getAllUsersDao(req, res) {
+    try {
+        // Consulta la base de datos para obtener todos los usuarios
+        const users = await userModel.find({}, "first_name last_name email role");
+
+        return res.status(200).json(users);
+    } catch (error) {
+        return res.status(500).json({ message: "Error al obtener usuarios", error: error.message });
+    }
+}
+
+async deleteInactiveUsersDao(req, res) {
+    try {
+        const twoDaysAgo = new Date();
+        twoDaysAgo.setDate(twoDaysAgo.getDate() - 2);
+
+        const usersToDelete = await userModel.find({
+            last_connection: { $lt: twoDaysAgo },
+        });
+
+        const deletedUsers = await userModel.deleteMany({
+            last_connection: { $lt: twoDaysAgo },
+        });
+
+        if (deletedUsers.deletedCount > 0) {
+            usersToDelete.forEach(async (user) => {
+                await sendAccountDeletionEmail(user.email);
+            });
+
+            return res.status(200).json({
+                message: `${deletedUsers.deletedCount} usuarios inactivos eliminados y notificados.`,
+            });
+        } else {
+            return res.status(200).json({ message: 'No hay usuarios inactivos para eliminar.' });
+        }
+    } catch (error) {
+        return res.status(500).json({
+            message: 'Error al eliminar usuarios inactivos',
+            error: error.message,
+        });
+    }
+}
+
+async deleteUserDao(req, res) {
+    try {
+        const { uid } = req.params;
+        
+        // Busca y elimina al usuario por su ID
+        const deletedUser = await userModel.findByIdAndDelete(uid);
+    
+        if (!deletedUser) {
+          return res.status(404).json({ message: 'Usuario no encontrado' });
+        }
+    
+        return res.status(200).json({ message: 'Usuario eliminado exitosamente' });
+      } catch (error) {
+      }
+}
+
+  
 }

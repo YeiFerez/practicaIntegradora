@@ -271,5 +271,21 @@ export class CartManagerDAO{
 			return `${error}`;
 		}
 	}
+
+	async createCartForUser(user) {
+		try {
+		  // Crear un nuevo carrito
+		  const newCart = await cartModel.create({ products: [] });
+	
+		  // Asociar el ID del nuevo carrito al usuario
+		  await userModel.findByIdAndUpdate(user._id, { cart: newCart._id });
+	
+		  return newCart;
+		} catch (error) {
+		  return `${error}`;
+		}
+	  }
 }
+
+
 

@@ -1,6 +1,7 @@
 import productModel from "../models/products.model.js";
 import ProductDTO from "../../dto/product.dto.js";
 import { faker } from '@faker-js/faker/locale/es';
+import { sendProductDeletionEmail } from "../../utils/email.utils.js";
 
 
 export  class ProductsManagerDAO {
@@ -68,6 +69,9 @@ export  class ProductsManagerDAO {
 			const productDeleted = await productModel.findById(pid);
 
 			if (productDeleted) return `No se elimino producto.`;
+			if (user.role === 'premium') {
+				await sendProductDeletionEmail(user.email, product.name);
+			  }
 			const products = await productModel.find();
 			return products;
 		} catch (error) {

@@ -12,7 +12,7 @@ router.get(
   cartsController.cart
 );
 
-router.post("/", roleAuth(["admin", "premium"]), cartsController.createCart);
+router.post("/", cartsController.createCart);
 
 router.post(
   "/:cid/product/:pid",

@@ -16,10 +16,12 @@ router.get("/products/product/:pid", viewsController.product);
 
 router.get("/cart/:cid", viewsController.cart);
 
-router.get("/chat", roleAuth("user"), viewsController.chat);
+router.get("/chat", viewsController.chat);
 
 router.get("/restore", roleAuth("user"), viewsController.restore);
 
 router.get("/upload", viewsController.upload);
+
+router.get('/admin/users/:uid', roleAuth('admin'), viewsController.adminUserView);
 
 export default router;

@@ -2,6 +2,7 @@ import productModel from "../models/products.model.js";
 import cartModel from "../models/carts.model.js";
 import { multiply, getTotal, mongoCart } from "../../utils/recursos.js";
 import ChatManager from "./chats.dao.js";
+import userModel from "../models/Users.model.js";
 
 const chatManager = new ChatManager();
 
@@ -12,12 +13,13 @@ export class ViewsManagerDAO {
         try {
 			const cart = await mongoCart(req, res);
 			const { user } = req.session;
+			console.log(cart);
 
 			const payload = {
 				header: true,
 				user,
-				cart,
-				style: "styles.css",
+				cart: cart._id,
+				style: "home.css",
 				title: "Home",
 			}
 			return payload;
@@ -30,7 +32,7 @@ export class ViewsManagerDAO {
 		try {
 			const payload = {
 				header: false,
-				style: "styles.css",
+				style: "login.css",
 				title: "Login",
 			}
 			return payload;
@@ -106,7 +108,7 @@ export class ViewsManagerDAO {
         limit,
         query,
         sort,
-        cart,
+        cart: cart._id,
         totalPages: products.totalPages,
         hasPrevPage: products.hasPrevPage,
         hasNextPage: products.hasNextPage,
@@ -135,7 +137,7 @@ export class ViewsManagerDAO {
 			const payload = {
 				header: true,
 				product,
-				cart,
+				cart: cart._id,
 				style: "product.css",
 				title: "Product",
 			}
@@ -172,13 +174,12 @@ export class ViewsManagerDAO {
     async getChatDao(req, res) {
 		try {
 			const { user } = req.session;
-            let messages = await chatManager.getAllMessages();
 			const payload = {
 				header: true,
 				user,
-				style: "styles.css",
+				style: 'chat.css',
 				title: "Chat",
-                messages
+                
 			}
 			return payload;
 		} catch (error) {
@@ -210,6 +211,29 @@ export class ViewsManagerDAO {
 				style: "upload.css",
 				title: "upload",
                 
+			}
+			return payload;
+		} catch (error) {
+			return `${error}`;
+		}
+	}
+
+	async getAdminViewsDao(req, res) {
+		try {
+			const { user } = req.session;
+            const { uid } = req.params;
+			// Busca el usuario en la base de datos
+			const userToView = await userModel.findById(uid);
+			if (!userToView) {
+				return res.status(404).json({ message: "Usuario no encontrado" });
+			  }
+
+			const payload = {
+				header: true,
+				user,
+				style: "adminUser.css",
+				title: "Chat",
+				userToView
 			}
 			return payload;
 		} catch (error) {

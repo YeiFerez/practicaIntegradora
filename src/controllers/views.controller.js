@@ -112,6 +112,27 @@ export const upload = async (req, res) => {
 	}
 };
 
+export const adminUserView = async (req, res) => {
+    try {
+        const { user } = req.session;
+		if (!user) return res.redirect('/');
+        const payload = await viewsRepository.getAdminViews(req, res);
+        if (typeof payload === 'string') {
+             return res.status(HTTP_STATUS.NOT_FOUND).json(errorResponse(payload));
+      }
+      // Convierte el documento de Mongoose en un objeto plano
+      const userToView = payload.userToView.toObject();
+
+      // Agrega el objeto convertido al payload
+      payload.userToView = userToView;
+
+      return res.status(HTTP_STATUS.OK).render('adminUser', payload);
+    } catch (err) {
+      return res.status(HTTP_STATUS.SERVER_ERROR).json(errorResponse(err.message));
+    }
+  };
+  
+
 export default {
 	home,
 	login,
@@ -121,5 +142,6 @@ export default {
 	product,
 	cart,
     restore,
-    upload
+    upload,
+    adminUserView
   };

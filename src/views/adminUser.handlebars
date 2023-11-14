@@ -1,0 +1,23 @@
+<div class="container">
+    <div class="user-card">
+        <h2>Información del Usuario</h2>
+        <p>Nombre: {{userToView.first_name}}</p>
+        <p>Apellido: {{userToView.last_name}}</p>
+        <p>Correo Electrónico: {{userToView.email}}</p>
+        <p>Rol: {{userToView.role}}</p>
+    </div>
+    <div class="action-buttons">
+        <form action="/api/users/premium/{{userToView._id}}" method="post">
+            <button type="submit">Actualizar a Premium</button>
+        </form>
+
+        <form action="/api/users/user/{{userToView._id}}" method="post">
+            <button type="submit">Rebajar a Usuario</button>
+        </form>
+
+        <form>
+        <button class="delete-user" data-user-id="{{userToView._id}}">Eliminar a este Usuario</button>
+    </form>
+    </div>
+</div>
+<script src="/js/adminUser.js"></script>

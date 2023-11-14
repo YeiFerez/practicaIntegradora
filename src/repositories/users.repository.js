@@ -37,7 +37,30 @@ class UsersRepository {
 			return new HttpError(error.message, HTTP_STATUS.SERVER_ERROR);
 		}
 	}
+	
+	async getAllUsers(req, res) {
+		try {
+			return await this.dao.getAllUsersDao(req, res);
+		} catch (error) {
+			return new HttpError(error.message, HTTP_STATUS.SERVER_ERROR);
+		}
+	} 
 
+	async deleteInactiveUser(req, res) {
+		try {
+			return await this.dao.deleteInactiveUsersDao(req, res);
+		} catch (error) {
+			return new HttpError(error.message, HTTP_STATUS.SERVER_ERROR);
+		}
+	} 
+
+	async deleteUsers(req, res) {
+		try {
+			return await this.dao.deleteUserDao(req, res);
+		} catch (error) {
+			return new HttpError(error.message, HTTP_STATUS.SERVER_ERROR);
+		}
+	} 
 }
 
 export default UsersRepository;

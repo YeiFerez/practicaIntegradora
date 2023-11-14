@@ -77,6 +77,15 @@ class ViewsRepository {
 			return `${error}`;
 		}
 	}
+
+	async getAdminViews(req, res) {
+		try {
+			return await this.dao.getAdminViewsDao(req, res);
+		} catch (error) {
+			return `${error}`;
+		}
+	}
+
 }
 
 export default ViewsRepository;

@@ -1,0 +1,52 @@
+/* Estilo para el contenedor principal */
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  
+  /* Estilo para la tarjeta que muestra la información del usuario */
+  .user-card {
+    background-color: #f5f5f5;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 20px;
+    margin-bottom: 20px;
+  }
+  
+  /* Estilo para los elementos del usuario */
+  .user-card h2 {
+    font-size: 24px;
+    margin-bottom: 10px;
+  }
+  
+  .user-card p {
+    font-size: 16px;
+  }
+  
+  /* Estilo para los botones de acción */
+  .action-buttons {
+    display: flex;
+    gap: 10px;
+  }
+  
+  .action-buttons button {
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    cursor: pointer;
+  }
+  
+  /* Estilo para el botón de eliminar */
+  .action-buttons button.delete {
+    background-color: #FF0000;
+  }
+  
+  /* Estilo para los enlaces de acción */
+  .action-buttons a {
+    text-decoration: none;
+    color: #007BFF;
+  }
+  

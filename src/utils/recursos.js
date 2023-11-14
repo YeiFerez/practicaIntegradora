@@ -54,15 +54,24 @@ export function getTotal(items) {
 }
 
 export async function mongoCart(req, res) {
-	let { cart } = req.signedCookies;
+	
+  
+	// Intenta obtener la cookie 'cart'
+	const cart = req.signedCookies['cart'];
+  
 	const existCart = await cartModel.findById(cart);
-
+  
 	if (existCart) {
-		return cart
-	} else if (cart && !existCart) {
-		const createdCart = await cartModel.create({ products: [] });
-		const cartId = createdCart.id;
-		res.cookie('cart', cartId, { signed: true });
-		cart = cartId;
+	  return existCart;
+	} else {
+	  // Si no existe la cookie 'cart' o no se encuentra el carrito, crea uno nuevo
+	  const createdCart = await cartModel.create({ products: [] });
+	  const cartId = createdCart.id;
+	  
+	  // Establece la cookie 'cart' en la respuesta
+	  res.cookie('cart', cartId, { signed: true });
+  
+	  return createdCart;
 	}
-}
+  }
+  

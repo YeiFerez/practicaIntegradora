@@ -12,6 +12,7 @@ import router from "./routes/router.js";
 import logger from "./utils/logger.util.js";
 import swaggerJSDoc from "swagger-jsdoc";
 import swaggerUiExpress from 'swagger-ui-express';
+import setupSocket from "./utils/socket.utils.js";
 
 // Rutas
 import productRouter from "./routes/products.router.js";
@@ -49,6 +50,7 @@ const enviroment = async () =>{
   await mongoose.connect(mongoUrl);
 };
 enviroment();
+app.use(cookieParser(cookieSecret));
 app.use(session({
   store: MongoStore.create({
       mongoUrl:mongoUrl,
@@ -80,17 +82,15 @@ app.use(express.static(__dirname+'/public'))
 
 app.use(express.json())
 app.use(express.urlencoded({extended:true}))
-app.use(cookieParser(cookieSecret));
+
 app.use(morgan('dev'));
 app.use(cors());
 app.use('/docs', swaggerUiExpress.serve, swaggerUiExpress.setup(specs));
-// app.use('/',viewRouter)
-// app.use('/api/sessions',sessionRouter)
-// app.use("/api/products", productRouter);
-// app.use("/api/carts", cartRouter);
-// app.use("/api/chat", chatRouter);
+
 
 const server = app.listen(PORT, () => {
     logger.info(`Server escuchando puerto ${PORT}`);
   });
+
+setupSocket(server);
 router(app);

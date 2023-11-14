@@ -62,4 +62,46 @@ export const sendRestoreEmail = async (restoreEmail) => {
 	}
 };
 
+export const sendAccountDeletionEmail = async (email) => {
+	try {
+	  const emailContent = {
+		from: EMAIL,
+		to: email,
+		subject: 'Cuenta eliminada por inactividad',
+		html: `
+		<div>
+		  <p>Tu cuenta ha sido eliminada debido a inactividad.</p>
+		  <p>Si deseas seguir utilizando nuestros servicios, por favor inicia sesión nuevamente.</p>
+		</div>
+		`,
+	  };
+  
+	  await transporter.sendMail(emailContent);
+	  return;
+	} catch (error) {
+	  return `${error}`;
+	}
+  };
+
+  export const sendProductDeletionEmail = async (userEmail, productName) => {
+	try {
+	  const emailContent = {
+		from: EMAIL,
+		to: `${userEmail}`,
+		subject: 'Producto eliminado',
+		html: `
+		  <div>
+			<p>El producto "${productName}" ha sido eliminado.</p>
+		  </div>
+		`,
+	  };
+  
+	  await transporter.sendMail(emailContent);
+	  return;
+	} catch (error) {
+	  return `${error}`;
+	}
+  };
+  
+
 

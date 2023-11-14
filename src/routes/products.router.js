@@ -20,10 +20,7 @@ router.put(
   productsController.editProductController
 );
 
-router.delete(
-  "/:pid",
-  roleAuth(["admin", "premium"]),
-  productsController.eraseProductController
+router.delete("/:pid",roleAuth(["admin", "premium"]),productsController.eraseProductController
 );
 
 router.post(

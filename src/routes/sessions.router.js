@@ -10,7 +10,6 @@ router.post("/login", sessionsController.login);
 
 router.post(
   "/logout",
-  roleAuth(["premium", "user"]),
   sessionsController.logout
 );
 

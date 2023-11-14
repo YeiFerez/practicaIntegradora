@@ -1,27 +1,37 @@
 <div class='custom-cart-container'>
-	<div class='custom-cart-list'>
-		{{#each payload}}
-			<div class='custom-cart-item'>
-				<p>{{this._id.name}}</p>
-				<p>$ {{this._id.price}}</p>
-				<p>x{{this.quantity}}</p>
-				<p><strong>Total: ${{multiply this._id.price this.quantity}}</strong></p>
-			</div>
+	<div class='custom-cart-list' >
+		{{#each payload }}
+    		<div class='custom-cart-item'>
+        		<p>{{this._id.name}}</p>
+        		<p>$ {{this._id.price}}</p>
+        		<p>x{{this.quantity}}</p>
+        		<p><strong>Total: ${{multiply this._id.price this.quantity}}</strong></p>
+        		<button class='custom-remove-product-button' data-cart="{{cart}}" data-product="{{this._id._id}}">Remove</button>
+    		</div>
 		{{/each}}
 
+
+
 		<div>
-			<p class='custom-cart-total-text'>TOTAL: ${{getTotal payload}}</p>
-			<button class='custom-cart-total-button'>PURCHASE</button>
+		<p class='custom-cart-total-text'>TOTAL: ${{getTotal payload}}</p>
+		<button id='purchaseButton' cart='{{cart}}' class='custom-cart-total-button custom-purchase-button' >PURCHASE</button>
 		</div>
 
-		<form class='custom-product-form' cart='{{cart}}' product='{{product._id}}'>
-			<input type='submit' value='Add to cart' class='custom-product-button' />
-		</form>
+		<div>
+        <form class='custom-cart-clear-form' cart='{{cart}}'>
+            <input type='submit' value='Clear Cart' class='custom-cart-clear-button' />
+        </form>
+    	</div>
 
 		<form class='custom-cart-form'>
-			<label>Total $</label>
-			<input type="text" value="{{getTotal payload}}" readonly />
-			<input type='submit' value='Send' class='custom-login-button' />
+    		<div class="form-group">
+        		<label for="totalAmount">Total $</label>
+        		<input type="text" id="totalAmount" value="{{getTotal payload}}" readonly />
+    		</div>
 		</form>
+
 	</div>
 </div>
+<script src='/js/clearCart.js' type="module"></script>
+<script src='/js/purchase.js' type="module"></script>
+<script src='/js/removeProduct.js' type="module"></script>
