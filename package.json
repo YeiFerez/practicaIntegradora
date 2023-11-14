@@ -8,7 +8,7 @@
     "test:carts": "mocha ./test/carts.test.js --timeout 10000",
     "test:products": "mocha ./test/products.test.js --timeout 10000",
     "test:sessions": "mocha ./test/sessions.test.js --timeout 10000",
-    "start": "SET NODE_ENV=production && nodemon ./src/apps.js",
+    "start": "node ./src/apps.js",
     "start:local": "SET NODE_ENV=local && nodemon ./src/apps.js",
     "start:development": "SET NODE_ENV=development && nodemon ./src/apps.js",
     "start:docker": "nodemon ./src/apps.js",
